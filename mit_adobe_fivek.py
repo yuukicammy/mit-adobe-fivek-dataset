@@ -169,7 +169,7 @@ class MITAboveFiveK:
                 print()
         for mirror in self.mirrors:
             url = f"{mirror}{self.archive}"
-            print(f"Downloading {url}")
+            print(f"Downloading {url} ...")
             try:
                 archive_path = os.path.join(self.raw_dir, self.archive)
                 self.download_file(url, archive_path)

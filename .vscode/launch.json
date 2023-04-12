@@ -21,6 +21,16 @@
                 "engineLogging": true
             },
             "preLaunchTask": "make debug"
-        }
+        },
+        {
+            "name": "Python: generate base",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/generate_base_json.py",
+            "args": [
+                "all.json",
+                "../"
+            ]
+        },
     ]
 }

@@ -63,7 +63,7 @@ class MITAboveFiveK:
         "D": "tiff16_d",
         "E": "tiff16_e",
     }
-    _category_types = {0: "Location", 1: "Time", 2: "Light", 3: "Subject"}
+    _category_types = {0: "location", 1: "time", 2: "light", 3: "subject"}
 
     def __init__(
         self, root: str, download: bool = False, experts: List[str] = None
@@ -349,7 +349,6 @@ class MITAboveFiveK:
         """
         return self._unique_categories()
 
-    @property
     def file_categories(self, fid: str) -> List[str]:
         """Return categories corresponding to fid.
            ex) file_categories['a0001-jmac_DSC1459'] = [outdoor, day, sun_sky, nature]

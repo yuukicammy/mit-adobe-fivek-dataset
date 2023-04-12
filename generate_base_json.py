@@ -10,7 +10,7 @@ Arguments:
   dir_root  Path of the root directory where the tar file was extracted.
 
 Example:
-    python generate_base_json.py ./fivek_all.json ../MITAdobeFiveK/raw/
+    python generate_base_json.py ./fivek_all.json ../
 
 Note:
     Please see the official website for more information.
@@ -19,16 +19,48 @@ Note:
 
 import os
 import argparse
-from typing import List, Dict, Tuple
+from typing import List, Dict, Any
+import json
+import csv
 from mit_adobe_fivek import MITAboveFiveK
 
 
 def load_list(filepath: str, encoding: str = 'ascii') -> List[str]:
+    """
+    Args:
+        filepath (str): Text file to be read.
+        encoding (str, optional): Encording of the file. Defaults to 'ascii'.
+
+    Returns:
+        List[str]: Returns a list with a single line of a text file as an element.
+    """
+    list_ = []
     if os.path.isfile(filepath):
         with open(filepath, 'r', encoding=encoding) as file:
-            return list(map(lambda s: s.rstrip("\n"), file.readlines()))
-    else:
-        return []
+            list_ = list(map(lambda s: s.rstrip("\n"), file.readlines()))
+    return list_
+
+
+def load_camera_info(filepath: str, encoding: str = 'utf-8') -> Dict[str, Any]:
+    """Load camera information of each image
+
+    Args:
+        filepath (str): Path to the CSV file containing the camera information corresponding to each image.
+        encoding (str, optional): Encording of the file. Defaults to 'utf-8'.
+
+    Returns:
+        Dict[str, Any]: A dictionary that can refer to camera information from each image name.
+    """
+    camera_info = {}
+    if os.path.isfile(filepath):
+        with open(filepath, newline='', encoding=encoding) as csvfile:
+            header = next(csv.reader(csvfile))
+            reader = csv.reader(csvfile)
+            for row in reader:
+                camera_info[row[0]] = {}
+                for i in range(1, len(row)):
+                    camera_info[row[0]][header[i]] = row[i]
+    return camera_info
 
 
 def extract_id(fid: str) -> int:
@@ -38,34 +70,61 @@ def extract_id(fid: str) -> int:
 def main():
 
     parser = argparse.ArgumentParser(
-        description=
-        'Generate a json file describing items of MIT-Adobe FiveK Dataset <https://data.csail.mit.edu/graphics/fivek/>.'
+        description='Generate a json file describing items of MIT-Adobe FiveK Dataset <https://data.csail.mit.edu/graphics/fivek/>.'
     )
     parser.add_argument('filepath',
                         type=str,
+                        default='all.json',
                         help='Path to save the generated json file.')
     parser.add_argument(
         'root_dir',
         type=str,
+        default='../',
         help='Path of the root directory where the tar file was extracted.')
+    parser.add_argument(
+        'camera_models',
+        type=str,
+        default='./camera_models.csv',
+        help='Path of the csv file listing a file id and its camera information.')
 
     args = parser.parse_args()
     fivek = MITAboveFiveK(args.root_dir, False)
 
-    files_license = {'AdobeMIT': [], 'Adobe': []}
-    files_license['AdobeMIT'] = load_list(
-        os.path.join(fivek.raw_dir, 'fivek_dataset', 'filesAdobeMIT.txt'))
-    files_license['Adobe'] = load_list(
-        os.path.join(fivek.raw_dir, 'fivek_dataset', 'filesAdobe.txt'))
+    files_license = {}
+    for fid in load_list(
+            os.path.join(fivek.raw_dir, 'fivek_dataset', 'filesAdobeMIT.txt')):
+        files_license[fid] = 'AdobeMIT'
+    for fid in load_list(
+            os.path.join(fivek.raw_dir, 'fivek_dataset', 'filesAdobe.txt')):
+        files_license[fid] = 'Adobe'
 
-    for fid in fivek.file_ids[:3]:
-        with open(args.filepath, 'a+', encoding='utf-8') as outfile:
-            data = {}
-            data['baseName'] = fid
-            data['id'] = extract_id(fid)
-            data['license'] = 'AdobeMIT' if fid in files_license[
-                'AdobeMIT'] else 'Adobe'
-            outfile.write(data)
+    category_label = fivek.category_types
+
+    camera_info = load_camera_info(args.camera_models)
+
+    for fid in fivek.file_ids:
+        data = {}
+        data['name'] = fid
+        data['id'] = extract_id(fid)
+        data['license'] = files_license[fid]
+        data['urls'] = {
+            'dng': f'http://data.csail.mit.edu/graphics/fivek/img/dng/{fid}.dng',
+            'tiff16': {}
+        }
+        for expert in ['a', 'b', 'c', 'd', 'e']:
+            data['urls']['tiff16'][
+                expert] = f'http://data.csail.mit.edu/graphics/fivek/img/tiff16_{expert}/{fid}.tif'
+        data['categories'] = {}
+        categories = fivek.file_categories(fid)
+        for i in range(4):
+            data['categories'][category_label[i]] = categories[i]
+        data['camera'] = {}
+        data['camera']['make'] = camera_info[fid]['make']
+        data['camera']['model'] = camera_info[fid]['model']
+
+        with open(args.filepath, 'a', encoding='utf-8') as outfile:
+            json.dump(data, outfile)
+            outfile.write(',')
 
 
 if __name__ == '__main__':

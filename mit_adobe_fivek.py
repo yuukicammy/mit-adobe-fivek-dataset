@@ -44,7 +44,7 @@ class MITAboveFiveK:
             puts it in root directory. If dataset is already downloaded, it is not
             downloaded again.
         experts (List[str], optional): List of experts to download. Experts are 'A', 'B', 'C', 'D', and/or 'E'.
-            The expert indicated as 'Expert A' in the FiveK (https://data.csail.mit.edu/graphics/fivek/) is designated as 'A'.
+            The expert indicated as 'Expert A' is designated as 'A'.
             If None, no expert data will be downloaded.
     Raises:
         RuntimeError: Error rises if dataset does not exist or the download failed.
@@ -79,7 +79,8 @@ class MITAboveFiveK:
 
         if not self._check_exists():
             raise RuntimeError(
-                "Dataset not found. You can use download=True to download it."
+                "Dataset not found. You can use download=True to download it. \
+                This error also occurs when download=True but the download did not complete."
             )
 
         # list of file id like 'a0001-jmac_DSC1459'
@@ -95,7 +96,10 @@ class MITAboveFiveK:
             index (int): Index
 
         Returns:
-            Tuple[str, List[str], List[str]]: Returns 1) RAW corresponding to the Index the path of the image, 2) path list of expert images, and 3) category list
+            Tuple[str, List[str], List[str]]: \
+                Returns 1) RAW corresponding to the Index the path of the image, \
+                        2) path list of expert images, and \
+                        3) category list.
         """
         fid = self.file_ids[index]
         raw_file_path = self.raw_image_path(fid)
@@ -111,7 +115,10 @@ class MITAboveFiveK:
         """Returns all data in dataset.
 
         Returns:
-            Tuple[List[str], List[List[str]], List[str]]: Tuple of 1) raw pathes, 2) expert image pathes, and 3) image categories.
+            Tuple[List[str], List[List[str]], List[str]]: Tuple of \
+                1) raw pathes, \
+                2) expert image pathes, and \
+                3) image categories.
         """
         raw_image_files = []
         expert_image_files = []
@@ -184,7 +191,8 @@ class MITAboveFiveK:
         file_ids = self._all_file_ids()
         if len(file_ids) == 0:
             print(
-                f"Prease download raw data before, or put {self.file_ids[0]} and {self.file_ids[1]} in {self.raw_dir}/fivek_dataset."
+                f"Prease download raw data before, or \
+                    put {self.file_ids[0]} and {self.file_ids[1]} in {self.raw_dir}/fivek_dataset."
             )
         print("Downloading experts images...")
         for expert in self.experts:
@@ -231,14 +239,15 @@ class MITAboveFiveK:
         return os.path.join(self.raw_dir, rawimage_path_format.format(target_dir, fid))
 
     def expert_image_path(self, fid: str, expert: str = "A") -> str:
-        """Returns a image path of expart file (TIFF format).
+        """Returns the path to an expert retouched image (TIFF format).
 
         Args:
-            fid (str): _description_
-            expert (str, optional): _description_. Defaults to "A".
+            fid (str): file id of an image. ex) 'a0001-jmac_DSC1459'
+            expert (str, optional): Retouched expert identifier. \
+                Expert is "A", "B", "C", "D", or "E". Defaults to "A".
 
         Returns:
-            str: _description_
+            str: path of expert retouched image
         """
         return os.path.join(
             self.experts_dir, self.expert_dir_names[expert], f"{fid}.tif"
@@ -308,10 +317,15 @@ class MITAboveFiveK:
 
     @property
     def file_ids(self) -> List[str]:
+        """List of file ids defined in "filesAdobe.txt" and "filesAdobeMIT.txt". \
+            The list of files is defined in `self.list_files`.
+        """
         return self._file_ids
 
     @property
     def experts(self) -> List[str]:
+        """The expert identifier specified at initialization.
+        """
         return self._experts
 
     @property
@@ -328,7 +342,10 @@ class MITAboveFiveK:
         """
         Returns:
             Dict[str, List[str]]: A dictionary that associates category types with categories.
-                {'Location': ['indoor', 'outdoor', 'unknown'], 'Time': ['day', 'dusk', 'night', 'unknown'], 'Light': ['artificial', 'mixed', 'sun_sky', 'unknown'], 'Subject': ['abstract', 'animals', 'man_made', 'nature', 'people', 'unknown']}
+                {'Location': ['indoor', 'outdoor', 'unknown'], \
+                'Time': ['day', 'dusk', 'night', 'unknown'], \
+                'Light': ['artificial', 'mixed', 'sun_sky', 'unknown'], \
+                'Subject': ['abstract', 'animals', 'man_made', 'nature', 'people', 'unknown']}
         """
         return self._unique_categories()
 

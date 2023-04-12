@@ -1,0 +1,72 @@
+{
+    "tasks": [
+        {
+            "label": "cmake debug",
+            "type": "shell",
+            "args": [
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "${workspaceRoot}"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "command": "cmake",
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "cmake",
+            "type": "shell",
+            "args": [
+                "-DCMAKE_BUILD_TYPE=Release",
+                "${workspaceRoot}"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "command": "cmake",
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "make",
+            "type": "cppbuild",
+            "command": "make",
+            "args": [
+                "-j"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "group": "build"
+        },
+        {
+            "label": "make debug",
+            "type": "cppbuild",
+            "command": "make",
+            "args": [
+                "-d",
+                "-j"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "make clean",
+            "type": "cppbuild",
+            "command": "make",
+            "args": [
+                "clean"
+            ],
+            "group": "build"
+        }
+    ],
+    "version": "2.0.0"
+}

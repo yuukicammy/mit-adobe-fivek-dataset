@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(lldb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/opendng",
+            "args": [
+                // "${workspaceRoot}/data/sample.DNG",
+                // "${workspaceRoot}/data/sample.TIFF"
+            ],
+            "stopAtEntry": true,
+            "cwd": "${workspaceRoot}/build",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "logging": {
+                "trace": true,
+                "traceResponse": true,
+                "engineLogging": true
+            },
+            "preLaunchTask": "make debug"
+        }
+    ]
+}

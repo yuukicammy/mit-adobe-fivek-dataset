@@ -3,14 +3,14 @@ Script to generate a json file describing the MIT-Adobe FiveK Dataset \
     items from the data downloaded and extracted from the archive.
 
 Usage:
-    python generate_base_json.py [-h] filepath dir_root
+    python generate_dataset_json.py [-h] filepath dir_root
 
 Arguments:
   filepath  Path to save the generated json file.
   dir_root  Path of the root directory where the tar file was extracted.
 
 Example:
-    python generate_base_json.py ./fivek_all.json ../
+    python generate_dataset_json.py ../data/fivek_all.json ../data
 
 Note:
     Please see the official website for more information.
@@ -118,10 +118,10 @@ def main():
         categories = fivek.file_categories(fid)
         for i in range(4):
             data['categories'][category_label[i]] = categories[i]
-        data['camera'] = {}
-        data['camera']['make'] = camera_info[fid]['make']
-        data['camera']['model'] = camera_info[fid]['model']
-
+        data['camera'] = {
+            'make': camera_info[fid]['make'],
+            'model':  camera_info[fid]['model']
+        }
         with open(args.filepath, 'a', encoding='utf-8') as outfile:
             json.dump(data, outfile)
             outfile.write(',')

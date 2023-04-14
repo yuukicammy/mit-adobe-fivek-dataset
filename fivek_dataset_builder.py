@@ -1,12 +1,10 @@
 import os
-from typing import List, Dict
-import logging
+from typing import List, Dict, Any
 import json
 import tarfile
 import urllib3
 import requests
 from progress.bar import Bar
-
 
 class MITAboveFiveKBuilderConfig:
     """
@@ -104,11 +102,13 @@ class MITAboveFiveKBuilder:
                  json_path: str = None):
         self.dataset_dir = dataset_dir
         self.redownload = redownload
-        self.experts = experts
+        self.experts = experts if experts else []
         self.config = self._create_builder_config(config_name)
         if self.config.name == 'per_camera_model':
             with open(json_path, mode='r', encoding='utf-8') as file:
-                self.metadata = json.load(file)    
+                self._metadata = json.load(file)
+        else:
+            self._metadata = {}
 
     def _create_builder_config(self, config_name: str) -> MITAboveFiveKBuilderConfig:
         """
@@ -129,7 +129,9 @@ class MITAboveFiveKBuilder:
         raise ValueError(f'Invalid config name: {config_name}') 
 
     def _check_exists(self):
-        for basename in self.metadata.keys():
+        if len(self._metadata) == 0:
+            return False
+        for basename in self._metadata.keys():
             if not os.path.isfile(self.raw_file_path(basename)):
                 return False
             for e in self.experts:
@@ -150,6 +152,7 @@ class MITAboveFiveKBuilder:
         metadata = {}
         for basename in basenames:
             metadata[basename] = {
+                'urls' : {'tiff16' : {}},
                 'files' : { 'dng' : self.raw_file_path(basename), 'tiff16': {}},
                 'categories' : {
                     'location' : categories[basename][0],
@@ -159,7 +162,8 @@ class MITAboveFiveKBuilder:
                 }
             }
             for e in self.experts:
-                metadata[basename]['file']['tiff16'][e] = self.expert_file_path(basename, e)
+                metadata[basename]['urls']['tiff16'][e] = f'https://data.csail.mit.edu/graphics/fivek/img/tiff16_{e}/{basename}.tif'
+                metadata[basename]['files']['tiff16'][e] = self.expert_file_path(basename, e)
         return metadata
 
     def _load_category_file(self) -> Dict[str, List[str]]:
@@ -181,7 +185,7 @@ class MITAboveFiveKBuilder:
                         categories[items[0]][j] = 'unknown'
         return categories
 
-    def build(self) -> Dict[str]:
+    def build(self) -> Dict[str, Any]:
         """
         Builds the dataset.
 
@@ -189,11 +193,11 @@ class MITAboveFiveKBuilder:
             Dict[str]: metadata of builded dataset.
             The format of metadata is as follows.
                 {
-                    'basename' : { 
+                    'basename' : {
                         'files': {
-                            'dng': 'path-to-local-dng-file',
+                            'dng': 'path-to-dng-dir/{basename}.dng',
                             'tiff16': {
-                                'a': 'path-to-local-tiff16_a-file',
+                                'a': 'path-to-tiff16_a-dir/{basename}.tiff',
                                 ...
                         },
                         'categories': {
@@ -202,6 +206,7 @@ class MITAboveFiveKBuilder:
                             'light': 'light-of-image',
                             'subject': 'subject-of-image'
                         }
+                    }
                 }
         
         Raises:
@@ -212,20 +217,18 @@ class MITAboveFiveKBuilder:
 
         if not self._check_exists():
             raise RuntimeError(
-                        f'Error building dataset.')
+                        'Error building dataset.')
         return self.metadata()
 
-    def metadata(self, remove_urls: True) -> Dict[str]:
+    def metadata(self) -> Dict[str, Any]:
         metadata = {}
         if self.config.name == 'archive':
             metadata = self._generate_metadata_from_extracted_archive()
         else:
-            metadata = self.metadata
-            for basename in self.metadata.keys():
-                if remove_urls:
-                    del metadata[basename]['urls']
+            metadata = self._metadata
+            for basename in self._metadata.keys():
                 metadata[basename]['files'] = {
-                    'dng' : self.raw_file_dir(basename),
+                    'dng' : self.raw_file_path(basename),
                     'tiff16': {}
                 }
                 for e in self.experts:
@@ -256,13 +259,13 @@ class MITAboveFiveKBuilder:
         else:
             raw_dir = os.path.join(self.dataset_dir, 'raw')
             os.makedirs(raw_dir, exist_ok=True)
-            with Bar('Download (dng)',
+            with Bar('Downloading (dng)',
                      fill='#',
                      suffix='%(percent).1f%% - %(eta)ds') as bar:
-                for basename in self.metadata.keys():
+                for basename in self._metadata.keys():
                     os.makedirs(self.raw_file_dir(basename), exist_ok=True)
                     filepath = self.raw_file_path(basename)
-                    item_info = self.metadata[basename]
+                    item_info = self._metadata[basename]
                     if self.redownload or not os.path.isfile(filepath):
                         if not download(url=item_info['urls']['dng'],
                                              filepath=filepath):
@@ -279,24 +282,25 @@ class MITAboveFiveKBuilder:
         Raises:
             RuntimeError: Error rises if  the download fails.
         """
+        if self.config.name == 'archive' and len(self._metadata) == 0:
+            self._metadata = self.metadata()
         expert_dir = os.path.join(self.dataset_dir, 'processed')
         os.makedirs(expert_dir, exist_ok=True)
         for e in self.experts:
             os.makedirs(os.path.join(expert_dir, f'tiff16_{e}'), exist_ok=True)
-        with Bar('Download (tiff)',
+        with Bar('Downloading (tiff)',
                  fill='#',
                  suffix='%(percent).1f%% - %(eta)ds') as bar:
-            for basename in self.metadata.keys():
+            for basename, value in self._metadata.items():
                 os.makedirs(self.raw_file_dir(basename), exist_ok=True)
                 for e in self.experts:
                     filepath = self.expert_file_path(basename, e)
-                    item_info = self.metadata[basename]
                     if self.redownload or not os.path.isfile(filepath):
                         if not download(
-                                url=item_info['urls']['tiff16'][e],
+                                url=value['urls']['tiff16'][e],
                                 filepath=filepath):
                             raise RuntimeError(
-                                f"Error downloading a file from {item_info['urls']['tiff16'][e]}."
+                                f"Error downloading a file from {value['urls']['tiff16'][e]}."
                             )
                     bar.next()
 
@@ -324,8 +328,8 @@ class MITAboveFiveKBuilder:
             return os.path.join(self.dataset_dir, 'raw',
                                 path_format.format(target_dir))
         else:
-            make = self.metadata[basename]['make']
-            model = self.metadata[basename]['model']
+            make = self._metadata[basename]['camera']['make']
+            model = self._metadata[basename]['camera']['model']
             camera_model = (make + '_' + model).replace(' ', '_')
             return os.path.join(self.dataset_dir, 'raw', camera_model)
 

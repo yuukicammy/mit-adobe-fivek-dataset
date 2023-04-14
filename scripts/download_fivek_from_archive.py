@@ -22,21 +22,33 @@ Note:
 """
 
 import argparse
-from mit_adobe_fivek import MITAboveFiveK
-
+import sys
+sys.path.append('../')
+from fivek_dataset_builder import MITAboveFiveKBuilder
 
 def main():
 
     parser = argparse.ArgumentParser(
-        description='Download the MIT-Adobe FiveK Dataset <https://data.csail.mit.edu/graphics/fivek/>.')
-    parser.add_argument('root', type=str,
-                        help='Root directory where the dataset will be downloaded and extracted. The data will be saved under `<root>/MITAboveFiveK/raw`.')
+        description="Download the MIT-Adobe FiveK Dataset <https://data.csail.mit.edu/graphics/fivek/>."
+    )
     parser.add_argument(
-        'experts', nargs='*', choices=['A', 'B', 'C', 'D', 'E'], help="List of experts who adjusted tone of the photos to download. Experts are 'A', 'B', 'C', 'D', and/or 'E'.")
-
+        "root",
+        type=str,
+        help="Root directory where the dataset will be downloaded and extracted. The data will be saved under `<root>/MITAboveFiveK/raw`.",
+    )
+    parser.add_argument(
+        "experts",
+        nargs="*",
+        choices=["a", "b", "c", "d", "e", []],
+        help="List of experts who adjusted tone of the photos to download. Experts are 'a', 'b', 'c', 'd', and/or 'e'.",
+        default=None,
+    )
     args = parser.parse_args()
-    MITAboveFiveK(args.root, True, args.experts)
+    builder = MITAboveFiveKBuilder(
+        dataset_dir=args.root, config_name="archive", experts=args.experts
+    )
+    builder.build()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -70,7 +70,8 @@ def extract_id(fid: str) -> int:
 def main():
 
     parser = argparse.ArgumentParser(
-        description='Generate a json file describing items of MIT-Adobe FiveK Dataset <https://data.csail.mit.edu/graphics/fivek/>.'
+        description=
+        'Generate a json file describing items of MIT-Adobe FiveK Dataset <https://data.csail.mit.edu/graphics/fivek/>.'
     )
     parser.add_argument('filepath',
                         type=str,
@@ -85,7 +86,8 @@ def main():
         'camera_models',
         type=str,
         default='./camera_models.csv',
-        help='Path of the csv file listing a file id and its camera information.')
+        help=
+        'Path of the csv file listing a file id and its camera information.')
 
     args = parser.parse_args()
     fivek = MITAboveFiveK(args.root_dir, False)
@@ -102,13 +104,14 @@ def main():
 
     camera_info = load_camera_info(args.camera_models)
 
+    alldata = {}
     for fid in fivek.file_ids:
         data = {}
-        data['name'] = fid
         data['id'] = extract_id(fid)
         data['license'] = files_license[fid]
         data['urls'] = {
-            'dng': f'http://data.csail.mit.edu/graphics/fivek/img/dng/{fid}.dng',
+            'dng':
+            f'http://data.csail.mit.edu/graphics/fivek/img/dng/{fid}.dng',
             'tiff16': {}
         }
         for expert in ['a', 'b', 'c', 'd', 'e']:
@@ -120,11 +123,11 @@ def main():
             data['categories'][category_label[i]] = categories[i]
         data['camera'] = {
             'make': camera_info[fid]['make'],
-            'model':  camera_info[fid]['model']
+            'model': camera_info[fid]['model']
         }
-        with open(args.filepath, 'a', encoding='utf-8') as outfile:
-            json.dump(data, outfile)
-            outfile.write(',')
+        alldata[fid] = data
+    with open(args.filepath, 'w', encoding='utf-8') as outfile:
+        json.dump(alldata, outfile)
 
 
 if __name__ == '__main__':

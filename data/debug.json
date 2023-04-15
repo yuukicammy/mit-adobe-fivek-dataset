@@ -1,0 +1,218 @@
+{
+    "a1384-dvf_095": {
+        "urls": {
+            "dng": "http://data.csail.mit.edu/graphics/fivek/img/dng/a1384-dvf_095.dng",
+            "tiff16": {
+                "a": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_a/a1384-dvf_095.tif",
+                "b": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_b/a1384-dvf_095.tif",
+                "c": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_c/a1384-dvf_095.tif",
+                "d": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_d/a1384-dvf_095.tif",
+                "e": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_e/a1384-dvf_095.tif"
+            }
+        },
+        "categories": {
+            "location": "outdoor",
+            "time": "day",
+            "light": "sun_sky",
+            "subject": "nature"
+        },
+        "id": 1384,
+        "license": "Adobe",
+        "camera": {
+            "make": "Leica",
+            "model": "M8"
+        }
+    },
+    "a1882-07-11-23-at-17h04m28s-_MG_6574": {
+        "urls": {
+            "dng": "http://data.csail.mit.edu/graphics/fivek/img/dng/a1882-07-11-23-at-17h04m28s-_MG_6574.dng",
+            "tiff16": {
+                "a": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_a/a1882-07-11-23-at-17h04m28s-_MG_6574.tif",
+                "b": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_b/a1882-07-11-23-at-17h04m28s-_MG_6574.tif",
+                "c": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_c/a1882-07-11-23-at-17h04m28s-_MG_6574.tif",
+                "d": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_d/a1882-07-11-23-at-17h04m28s-_MG_6574.tif",
+                "e": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_e/a1882-07-11-23-at-17h04m28s-_MG_6574.tif"
+            }
+        },
+        "categories": {
+            "location": "outdoor",
+            "time": "unknown",
+            "light": "unknown",
+            "subject": "unknown"
+        },
+        "id": 1882,
+        "license": "AdobeMIT",
+        "camera": {
+            "make": "Canon",
+            "model": "EOS 5D"
+        }
+    },
+    "a4902-_DGW0251": {
+        "urls": {
+            "dng": "http://data.csail.mit.edu/graphics/fivek/img/dng/a4902-_DGW0251.dng",
+            "tiff16": {
+                "a": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_a/a4902-_DGW0251.tif",
+                "b": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_b/a4902-_DGW0251.tif",
+                "c": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_c/a4902-_DGW0251.tif",
+                "d": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_d/a4902-_DGW0251.tif",
+                "e": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_e/a4902-_DGW0251.tif"
+            }
+        },
+        "categories": {
+            "location": "indoor",
+            "time": "unknown",
+            "light": "artificial",
+            "subject": "people"
+        },
+        "id": 4902,
+        "license": "AdobeMIT",
+        "camera": {
+            "make": "Nikon",
+            "model": "D700"
+        }
+    },
+    "a1525-jmac_MG_0646": {
+        "urls": {
+            "dng": "http://data.csail.mit.edu/graphics/fivek/img/dng/a1525-jmac_MG_0646.dng",
+            "tiff16": {
+                "a": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_a/a1525-jmac_MG_0646.tif",
+                "b": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_b/a1525-jmac_MG_0646.tif",
+                "c": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_c/a1525-jmac_MG_0646.tif",
+                "d": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_d/a1525-jmac_MG_0646.tif",
+                "e": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_e/a1525-jmac_MG_0646.tif"
+            }
+        },
+        "categories": {
+            "location": "outdoor",
+            "time": "day",
+            "light": "sun_sky",
+            "subject": "nature"
+        },
+        "id": 1525,
+        "license": "Adobe",
+        "camera": {
+            "make": "Canon",
+            "model": "EOS 5D"
+        }
+    },
+    "a4655-20090214_at_00h14m18__78U3080": {
+        "urls": {
+            "dng": "http://data.csail.mit.edu/graphics/fivek/img/dng/a4655-20090214_at_00h14m18__78U3080.dng",
+            "tiff16": {
+                "a": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_a/a4655-20090214_at_00h14m18__78U3080.tif",
+                "b": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_b/a4655-20090214_at_00h14m18__78U3080.tif",
+                "c": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_c/a4655-20090214_at_00h14m18__78U3080.tif",
+                "d": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_d/a4655-20090214_at_00h14m18__78U3080.tif",
+                "e": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_e/a4655-20090214_at_00h14m18__78U3080.tif"
+            }
+        },
+        "categories": {
+            "location": "indoor",
+            "time": "unknown",
+            "light": "mixed",
+            "subject": "people"
+        },
+        "id": 4655,
+        "license": "AdobeMIT",
+        "camera": {
+            "make": "Canon",
+            "model": "EOS-1D Mark III"
+        }
+    },
+    "a0961-WP_Amanda_3rd_bday037": {
+        "urls": {
+            "dng": "http://data.csail.mit.edu/graphics/fivek/img/dng/a0961-WP_Amanda_3rd_bday037.dng",
+            "tiff16": {
+                "a": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_a/a0961-WP_Amanda_3rd_bday037.tif",
+                "b": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_b/a0961-WP_Amanda_3rd_bday037.tif",
+                "c": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_c/a0961-WP_Amanda_3rd_bday037.tif",
+                "d": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_d/a0961-WP_Amanda_3rd_bday037.tif",
+                "e": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_e/a0961-WP_Amanda_3rd_bday037.tif"
+            }
+        },
+        "categories": {
+            "location": "outdoor",
+            "time": "unknown",
+            "light": "unknown",
+            "subject": "unknown"
+        },
+        "id": 961,
+        "license": "Adobe",
+        "camera": {
+            "make": "Canon",
+            "model": "EOS 10D"
+        }
+    },
+    "a0432-IMG_4895": {
+        "urls": {
+            "dng": "http://data.csail.mit.edu/graphics/fivek/img/dng/a0432-IMG_4895.dng",
+            "tiff16": {
+                "a": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_a/a0432-IMG_4895.tif",
+                "b": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_b/a0432-IMG_4895.tif",
+                "c": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_c/a0432-IMG_4895.tif",
+                "d": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_d/a0432-IMG_4895.tif",
+                "e": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_e/a0432-IMG_4895.tif"
+            }
+        },
+        "categories": {
+            "location": "outdoor",
+            "time": "day",
+            "light": "sun_sky",
+            "subject": "nature"
+        },
+        "id": 432,
+        "license": "AdobeMIT",
+        "camera": {
+            "make": "Canon",
+            "model": "EOS 450D"
+        }
+    },
+    "a0377-IMG_3486": {
+        "urls": {
+            "dng": "http://data.csail.mit.edu/graphics/fivek/img/dng/a0377-IMG_3486.dng",
+            "tiff16": {
+                "a": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_a/a0377-IMG_3486.tif",
+                "b": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_b/a0377-IMG_3486.tif",
+                "c": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_c/a0377-IMG_3486.tif",
+                "d": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_d/a0377-IMG_3486.tif",
+                "e": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_e/a0377-IMG_3486.tif"
+            }
+        },
+        "categories": {
+            "location": "outdoor",
+            "time": "day",
+            "light": "sun_sky",
+            "subject": "nature"
+        },
+        "id": 377,
+        "license": "AdobeMIT",
+        "camera": {
+            "make": "Canon",
+            "model": "EOS 450D"
+        }
+    },
+    "a0298-IMG_5043": {
+        "urls": {
+            "dng": "http://data.csail.mit.edu/graphics/fivek/img/dng/a0298-IMG_5043.dng",
+            "tiff16": {
+                "a": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_a/a0298-IMG_5043.tif",
+                "b": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_b/a0298-IMG_5043.tif",
+                "c": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_c/a0298-IMG_5043.tif",
+                "d": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_d/a0298-IMG_5043.tif",
+                "e": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_e/a0298-IMG_5043.tif"
+            }
+        },
+        "categories": {
+            "location": "outdoor",
+            "time": "day",
+            "light": "sun_sky",
+            "subject": "nature"
+        },
+        "id": 298,
+        "license": "AdobeMIT",
+        "camera": {
+            "make": "Canon",
+            "model": "EOS 450D"
+        }
+    }
+}

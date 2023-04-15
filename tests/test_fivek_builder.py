@@ -24,16 +24,12 @@ class TestMITAboveFiveKBuilderBuild(FiveKTestCase):
     def test_build_wrong_split(self):
         shutil.rmtree(self.cache_dir)
         for config in MITAboveFiveKBuilder.BUILDER_CONFIGS:
-            builder = MITAboveFiveKBuilder(
-                self.dataset_dir, config_name=config.name
-            )
+            builder = MITAboveFiveKBuilder(self.dataset_dir, config_name=config.name)
             self.assertRaises(ValueError, builder.build, "wrong")
 
     def test_per_camera_model_build_debug(self):
         shutil.rmtree(self.cache_dir)
-        builder = MITAboveFiveKBuilder(
-            self.dataset_dir, config_name="per_camera_model"
-        )
+        builder = MITAboveFiveKBuilder(self.dataset_dir, config_name="per_camera_model")
         res = builder.build(split="debug")
         assert len(res.keys()) == 9
         self.check_metadata(res)
@@ -63,9 +59,7 @@ class TestMITAboveFiveKBuilderPath(FiveKTestCase):
             "Canon_EOS_450D",
             "a0298-IMG_5043.dng",
         )
-        builder = MITAboveFiveKBuilder(
-            self.dataset_dir, config_name="per_camera_model"
-        )
+        builder = MITAboveFiveKBuilder(self.dataset_dir, config_name="per_camera_model")
         builder.build("debug")
         actual = builder.raw_file_path("a0298-IMG_5043")
         assert expected == actual
@@ -87,9 +81,7 @@ class TestMITAboveFiveKBuilderPath(FiveKTestCase):
 
 class TestMITAboveFiveKBuilderMetadata(FiveKTestCase):
     def test_metadata_archive_debug(self):
-        builder = MITAboveFiveKBuilder(
-            self.dataset_dir, "archive"
-        )
+        builder = MITAboveFiveKBuilder(self.dataset_dir, "archive")
         metadata = builder.build("debug")
         assert len(metadata.keys()) == 9
         self.check_metadata(metadata)
@@ -98,7 +90,7 @@ class TestMITAboveFiveKBuilderMetadata(FiveKTestCase):
         builder = MITAboveFiveKBuilder(os.path.join("..", "MITAboveFiveK"), "archive")
         metadata = builder.metadata()
         assert len(metadata.keys()) == 5000
-        self.check_metadata(metadata)
+        self.check_metadata({metadata["metadata)
 
 
 if __name__ == "__main__":

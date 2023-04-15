@@ -16,7 +16,19 @@ class MITAboveFiveK(Dataset):
 
     Args:
         root (string): Root directory in which MITAboveFiveK directory to be created.
+        split (str):  One of {'train', 'val', 'test', 'debug'}.
+        transform (callable, optional): A function/transform that takes in an PIL image
+            and returns a transformed version. E.g, ``transforms.RandomCrop``
+        target_transform (callable, optional): A function/transform that takes in the
+            target and transforms it.
+        download (bool, optional): If true, downloads the dataset from the internet and
+            puts it in root directory. If dataset is already downloaded, it is not
+            downloaded again.
+        experts (List[str], optional): List of experts to download. Experts are 'a', 'b', 'c', 'd', and/or 'e'.
+            'a' means 'Expert A' in the website <https://data.csail.mit.edu/graphics/fivek/>.
+            If None, no expert data will be downloaded.
 
+    Notes:
             Expects the following folder structure if download=False:
             .. code::
                 <root>
@@ -35,27 +47,13 @@ class MITAboveFiveK(Dataset):
                         |   └── ...
                         ├── tiff16_b
                         └── ...
-                    └── trainint.json
-                    └── validation.json
-                    └── testint.json
-        split (str):  One of {'train', 'val', 'test'}.
-        transform (callable, optional): A function/transform that takes in an PIL image
-            and returns a transformed version. E.g, ``transforms.RandomCrop``
-        target_transform (callable, optional): A function/transform that takes in the
-            target and transforms it.
-        download (bool, optional): If true, downloads the dataset from the internet and
-            puts it in root directory. If dataset is already downloaded, it is not
-            downloaded again.
-        experts (List[str], optional): List of experts to download. Experts are 'a', 'b', 'c', 'd', and/or 'e'.
-            'a' means 'Expert A' in the website <https://data.csail.mit.edu/graphics/fivek/>.
-            If None, no expert data will be downloaded.
+                    ├── trainint.json
+                    ├── validation.json
+                    ├── testint.json
+                    └── debugging.json
     Raises:
         RuntimeError: Error rises if dataset does not exist or the download failed.
     """
-
-    train_file = "training.json"
-    val_file = "validation.json"
-    test_file = "testing.json"
 
     def __init__(
         self, root: str, split: str, download: bool = False, experts: List[str] = None
@@ -64,9 +62,10 @@ class MITAboveFiveK(Dataset):
         self.root = root
 
         # One of {'train', 'val', 'test'}
-        if split not in ["train", "val", "test"]:
+        split = split.lower()
+        if split not in ["train", "val", "test", "debug"]:
             raise ValueError(
-                f"Invalid split: {split}. `split` must be one of {'train', 'val', 'test'}."
+                f"Invalid split: {split}. `split` must be one of {'train', 'val', 'test', 'debug'}."
             )
         self.split = split
 
@@ -78,29 +77,18 @@ class MITAboveFiveK(Dataset):
                 if e in ["a", "b", "c", "d", "e"]:
                     self.experts.append(e)
 
-        self.data_file = os.path.join(
-            self.dataset_dir,
-            self.train_file
-            if self.split == "train"
-            else self.val_file
-            if self.split == "val"
-            else self.test_file,
-        )
-
         if download:
             self.metadata = MITAboveFiveKBuilder(
                 dataset_dir=self.dataset_dir,
                 config_name="per_camera_model",
                 experts=self.experts,
-                json_path=self.data_file,
-            ).build()
+            ).build(split=self.split)
         else:
             self.metadata = MITAboveFiveKBuilder(
                 dataset_dir=self.dataset_dir,
                 config_name="per_camera_model",
                 experts=self.experts,
-                json_path=self.data_file,
-            ).metadata()
+            ).metadata(split=self.split)
         self.keys_list = list(self.metadata.keys())
 
         if not self._check_exists():
@@ -117,6 +105,8 @@ class MITAboveFiveK(Dataset):
         return len(self.keys_list)
 
     def _check_exists(self) -> bool:
+        if len(self.metadata) == 0:
+            return False
         for basename in self.metadata.keys():
             if not os.path.isfile(self.metadata[basename]["files"]["dng"]):
                 return False

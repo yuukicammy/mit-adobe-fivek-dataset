@@ -359,7 +359,7 @@ class MITAboveFiveKBuilder:
 
     def download_json(self) -> None:
         for key, path in self.json_files.items():
-            if not os.path.isfile(path):
+            if self.redownload or not os.path.isfile(path):
                 download(self.JSON_URLS[key], path)
 
     def download_raw(self) -> None:

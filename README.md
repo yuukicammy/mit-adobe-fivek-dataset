@@ -27,11 +27,38 @@ The dataset is a valuable resource for the computer vision and image processing 
 |[a1384-dvf_095.dng](https://data.csail.mit.edu/graphics/fivek/img/dng/a1384-dvf_095.dng)|![tiff16_a/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_A.jpg)|![tiff16_b/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_B.jpg)|![tiff16_c/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_C.jpg)|![tiff16_d/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_D.jpg)|![tiff16_e/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_E.jpg)|{ "location": "outdoor", "time": "day", "light": "sun_sky", "subject": "nature" }|Leica M8|
 |[a4607-050801_</br >080948__</br >I2E5512.dng](https://data.csail.mit.edu/graphics/fivek/img/dng/a4607-050801_080948__I2E5512.dng)|![tiff16_a/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_A.jpg)|![tiff16_b/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_B.jpg)|![tiff16_c/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_C.jpg)|![tiff16_d/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_D.jpg)|![tiff16_e/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_E.jpg)|{ "location": "indoor", "time": "day", "light": "artificial", "subject": "people" }|Canon EOS-1D Mark II|
 
-# Dataset Loader
+# Code
+
+This repository provides tools to download and use MIT-Adobe FiveK Dataset in a format suitable for machine learning.
+
+You can download the dataset with a single line in Python code. Also, you can use Pytorch's DetaLoader to iteratively retrieve data for your own use.
+With Pytorch's DataLoader, preprocessing can be easily accomplished with multiprocessing!
 
 ## Requirements
+- Python 3.7 or greater
+- Pytorch 2.X 
+- tqdm
+- urllib3
 
 ## Usage
 
+You can use as follows.
 
-I provide 
+NOTE: MUST set`batch_size` to `None` to simply load data to disable automatic batching.
+
+```python
+from torch.utils.data.dataloader import DataLoader
+from dataset.fivek import MITAboveFiveK
+
+metadata_loader = DataLoader(
+    MITAboveFiveK(root="path-to-dataset-root", split="train", download=True, experts=["a"]),
+    batch_size=None, num_workers=2)
+
+for item in metadata_loader:
+    # Processing as you want
+    print(item["files"]["dng"])
+```
+
+## Example
+
+Please see [sample code](./sample_preprocess.py) .

@@ -23,18 +23,19 @@ Note:
 
 import argparse
 import sys
-sys.path.append('../')
+
+sys.path.append("../")
 from fivek_dataset_builder import MITAboveFiveKBuilder
 
-def main():
 
+def main():
     parser = argparse.ArgumentParser(
         description="Download the MIT-Adobe FiveK Dataset <https://data.csail.mit.edu/graphics/fivek/>."
     )
     parser.add_argument(
-        "root",
+        "dir",
         type=str,
-        help="Root directory where the dataset will be downloaded and extracted. The data will be saved under `<root>/MITAboveFiveK/raw`.",
+        help="A directory where the dataset will be downloaded and extracted. The data will be saved under `<root>/MITAboveFiveK/raw`.",
     )
     parser.add_argument(
         "experts",
@@ -45,7 +46,7 @@ def main():
     )
     args = parser.parse_args()
     builder = MITAboveFiveKBuilder(
-        dataset_dir=args.root, config_name="archive", experts=args.experts
+        dataset_dir=args.dir, config_name="archive", experts=args.experts
     )
     builder.build()
 

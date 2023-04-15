@@ -99,7 +99,10 @@ class MITAboveFiveK(Dataset):
             )
 
     def __getitem__(self, index: int) -> Dict[str, Any]:
-        return self.metadata[self.keys_list[index]]
+        item = self.metadata[self.keys_list[index]]
+        item["basename"] = self.keys_list[index]
+        del item["urls"]
+        return item
 
     def __len__(self):
         return len(self.keys_list)

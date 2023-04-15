@@ -19,6 +19,10 @@ class TestMITAboveFiveK(FiveKTestCase):
             RuntimeError, MITAboveFiveK, self.cache_dir, "debug", download=False
         )
 
+    def test_init_with_data(self):
+        MITAboveFiveK(self.cache_dir, "debug", download=True)
+        MITAboveFiveK(self.cache_dir, "debug", download=False)
+
     def test___len__(self):
         assert MITAboveFiveK(self.cache_dir, "debug", download=True).__len__() == 9
 
@@ -26,10 +30,11 @@ class TestMITAboveFiveK(FiveKTestCase):
 class TestMITAboveFiveKWithDataLoader(FiveKTestCase):
     def test_load_with_dataloader(self):
         metadata_loader = DataLoader(
-            MITAboveFiveK(self.cache_dir, "debug", download=True), batch_size=1
+            MITAboveFiveK(self.cache_dir, "debug", download=True),
+            batch_size=None,
         )
         for metadata in metadata_loader:
-            self.check_metadata(metadata)
+            self.check_metadata({metadata["basename"]: metadata})
 
 
 if __name__ == "__main__":

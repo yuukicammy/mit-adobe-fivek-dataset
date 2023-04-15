@@ -1,61 +1,48 @@
 import os
 import shutil
 import unittest
-from fivek_dataset_builder import MITAboveFiveKBuilder
-
-cache_dir = ".cache"
-
-
-def check_metadata(metadata):
-    categories_labels = ["location", "time", "light", "subject"]
-    for value in metadata.values():
-        assert 0 < len(value["files"]["dng"])
-        for label in categories_labels:
-            assert 0 < len(value["categories"][label])
-        assert 0 < value["id"] <= 5000
-        assert 0 < len(value["license"])
+from tests.test_common import FiveKTestCase
+from dataset.fivek_builder import MITAboveFiveKBuilder
 
 
-class TestMITAboveFiveKBuilderInit(unittest.TestCase):
+class TestMITAboveFiveKBuilderInit(FiveKTestCase):
     def test_init_all(self):
         for config in MITAboveFiveKBuilder.BUILDER_CONFIGS:
-            MITAboveFiveKBuilder(
-                os.path.join(cache_dir, "MITAboveFiveK"), config_name=config.name
-            )
-            shutil.rmtree(cache_dir)
+            MITAboveFiveKBuilder(self.dataset_dir, config_name=config.name)
+            shutil.rmtree(self.cache_dir)
 
     def test_init_wrong_config(self):
         self.assertRaises(
             ValueError,
             MITAboveFiveKBuilder,
-            os.path.join(cache_dir, "MITAboveFiveK"),
+            self.dataset_dir,
             config_name="wrong_config",
         )
 
 
-class TestMITAboveFiveKBuilderBuild(unittest.TestCase):
+class TestMITAboveFiveKBuilderBuild(FiveKTestCase):
     def test_build_wrong_split(self):
-        shutil.rmtree(cache_dir)
+        shutil.rmtree(self.cache_dir)
         for config in MITAboveFiveKBuilder.BUILDER_CONFIGS:
             builder = MITAboveFiveKBuilder(
-                os.path.join(cache_dir, "MITAboveFiveK"), config_name=config.name
+                self.dataset_dir, config_name=config.name
             )
             self.assertRaises(ValueError, builder.build, "wrong")
 
     def test_per_camera_model_build_debug(self):
-        shutil.rmtree(cache_dir)
+        shutil.rmtree(self.cache_dir)
         builder = MITAboveFiveKBuilder(
-            os.path.join(cache_dir, "MITAboveFiveK"), config_name="per_camera_model"
+            self.dataset_dir, config_name="per_camera_model"
         )
         res = builder.build(split="debug")
         assert len(res.keys()) == 9
-        check_metadata(res)
+        self.check_metadata(res)
 
 
-class TestMITAboveFiveKBuilderPath(unittest.TestCase):
+class TestMITAboveFiveKBuilderPath(FiveKTestCase):
     def test_raw_file_path_archive(self):
         expected = os.path.join(
-            cache_dir,
+            self.cache_dir,
             "MITAboveFiveK",
             "raw",
             "fivek_dataset",
@@ -65,20 +52,19 @@ class TestMITAboveFiveKBuilderPath(unittest.TestCase):
             "a0298-IMG_5043.dng",
         )
         actual = MITAboveFiveKBuilder(
-            os.path.join(cache_dir, "MITAboveFiveK"), config_name="archive"
+            os.path.join(self.cache_dir, "MITAboveFiveK"), config_name="archive"
         ).raw_file_path("a0298-IMG_5043")
         assert expected == actual
 
     def test_raw_file_path_per_camera_model(self):
         expected = os.path.join(
-            cache_dir,
-            "MITAboveFiveK",
+            self.dataset_dir,
             "raw",
             "Canon_EOS_450D",
             "a0298-IMG_5043.dng",
         )
         builder = MITAboveFiveKBuilder(
-            os.path.join(cache_dir, "MITAboveFiveK"), config_name="per_camera_model"
+            self.dataset_dir, config_name="per_camera_model"
         )
         builder.build("debug")
         actual = builder.raw_file_path("a0298-IMG_5043")
@@ -86,11 +72,11 @@ class TestMITAboveFiveKBuilderPath(unittest.TestCase):
 
     def test_expert_path(self):
         expected = os.path.join(
-            cache_dir, "MITAboveFiveK", "processed", "tiff16_e", "a0298-IMG_5043.tif"
+            self.dataset_dir, "processed", "tiff16_e", "a0298-IMG_5043.tif"
         )
         for config in MITAboveFiveKBuilder.BUILDER_CONFIGS:
             builder = MITAboveFiveKBuilder(
-                os.path.join(cache_dir, "MITAboveFiveK"),
+                self.dataset_dir,
                 config_name=config.name,
                 experts=["e"],
             )
@@ -99,22 +85,22 @@ class TestMITAboveFiveKBuilderPath(unittest.TestCase):
             assert expected == actual
 
 
-class TestMITAboveFiveKBuilderMetadata(unittest.TestCase):
+class TestMITAboveFiveKBuilderMetadata(FiveKTestCase):
     def test_metadata_archive_debug(self):
         builder = MITAboveFiveKBuilder(
-            os.path.join(cache_dir, "MITAboveFiveK"), "archive"
+            self.dataset_dir, "archive"
         )
         metadata = builder.build("debug")
         assert len(metadata.keys()) == 9
-        check_metadata(metadata)
+        self.check_metadata(metadata)
 
     def test_metadata_archive_all(self):
         builder = MITAboveFiveKBuilder(os.path.join("..", "MITAboveFiveK"), "archive")
         metadata = builder.metadata()
         assert len(metadata.keys()) == 5000
-        check_metadata(metadata)
+        self.check_metadata(metadata)
 
 
 if __name__ == "__main__":
-    os.makedirs(cache_dir, exist_ok=True)
+    os.makedirs(FiveKTestCase.cache_dir, exist_ok=True)
     unittest.main()

@@ -8,7 +8,7 @@ The MIT-Adobe FiveK Dataset is a collection that includes the following items:
 import os
 from typing import List, Dict, Any
 from torch.utils.data import Dataset
-from fivek_dataset_builder import MITAboveFiveKBuilder
+from dataset.fivek_builder import MITAboveFiveKBuilder
 
 
 class MITAboveFiveK(Dataset):

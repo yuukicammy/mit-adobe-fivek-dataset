@@ -24,8 +24,7 @@ Note:
 import argparse
 import sys
 
-sys.path.append("../")
-from fivek_dataset_builder import MITAboveFiveKBuilder
+from dataset.fivek_builder import MITAboveFiveKBuilder
 
 
 def main():

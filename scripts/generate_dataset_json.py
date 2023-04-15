@@ -22,15 +22,12 @@ Note:
 """
 
 import os
-import sys
 import argparse
 from typing import List, Dict, Any
 import json
 import csv
 import random
-
-sys.path.append("./")
-from fivek_dataset_builder import MITAboveFiveKBuilder
+from dataset.fivek_builder import MITAboveFiveKBuilder
 
 random.seed(42)
 

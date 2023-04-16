@@ -1,6 +1,6 @@
 """
-Script to generate a json files describing the MIT-Adobe FiveK Dataset \
-    items from the data downloaded and extracted from the archive.
+Script to generate a json files describing the MIT-Adobe FiveK Dataset 
+items from the data downloaded and extracted from the archive.
 
 Usage:
     python generate_dataset_json.py [-h] dir_root camera_models train_ratio val_ratio
@@ -101,10 +101,10 @@ def split_list(list: List[Any], ratios: List[float]) -> List[List[Any]]:
     n_data = len(list)
     sum_ratio = sum(ratios)
     n_curr = 0
-    for ratio in ratios[: len(ratios) - 1]:
+    for ratio in ratios[:len(ratios) - 1]:
         ratio /= sum_ratio
         n = int(ratio * n_data)
-        splitted.append(list[n_curr : n_curr + n])
+        splitted.append(list[n_curr:n_curr + n])
         n_curr += n
     splitted.append(list[n_curr:])
     return splitted
@@ -112,7 +112,8 @@ def split_list(list: List[Any], ratios: List[float]) -> List[List[Any]]:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Generate a json file describing items of MIT-Adobe FiveK Dataset <https://data.csail.mit.edu/graphics/fivek/>."
+        description=
+        "Generate a json file describing items of MIT-Adobe FiveK Dataset <https://data.csail.mit.edu/graphics/fivek/>."
     )
     parser.add_argument(
         "root_dir",
@@ -124,7 +125,8 @@ def main():
         "camera_models",
         type=str,
         default="./camera_models.csv",
-        help="Path of the csv file listing a file id and its camera information.",
+        help=
+        "Path of the csv file listing a file id and its camera information.",
     )
     parser.add_argument(
         "train_ratio",
@@ -141,19 +143,21 @@ def main():
 
     args = parser.parse_args()
     if args.train_ratio + args.val_ratio > 0.99:
-        print("Please set `train_ratio` and `val_ratio` to be less than 0.99. ")
+        print(
+            "Please set `train_ratio` and `val_ratio` to be less than 0.99. ")
 
-    builder = MITAboveFiveKBuilder(dataset_dir=args.root_dir, config_name="archive")
+    builder = MITAboveFiveKBuilder(dataset_dir=args.root_dir,
+                                   config_name="archive")
     metadata = builder.build()
 
     files_license = {}
     for fid in load_list(
-        os.path.join(builder.dataset_dir, "raw", "fivek_dataset", "filesAdobeMIT.txt")
-    ):
+            os.path.join(builder.dataset_dir, "raw", "fivek_dataset",
+                         "filesAdobeMIT.txt")):
         files_license[fid] = "AdobeMIT"
     for fid in load_list(
-        os.path.join(builder.dataset_dir, "raw", "fivek_dataset", "filesAdobe.txt")
-    ):
+            os.path.join(builder.dataset_dir, "raw", "fivek_dataset",
+                         "filesAdobe.txt")):
         files_license[fid] = "Adobe"
 
     camera_info = load_camera_info(args.camera_models)
@@ -162,24 +166,26 @@ def main():
         value["id"] = extract_id(name)
         value["license"] = files_license[name]
         value["urls"] = {
-            "dng": f"http://data.csail.mit.edu/graphics/fivek/img/dng/{name}.dng",
+            "dng":
+            f"http://data.csail.mit.edu/graphics/fivek/img/dng/{name}.dng",
             "tiff16": {},
         }
         for expert in ["a", "b", "c", "d", "e"]:
             value["urls"]["tiff16"][
-                expert
-            ] = f"http://data.csail.mit.edu/graphics/fivek/img/tiff16_{expert}/{name}.tif"
+                expert] = f"http://data.csail.mit.edu/graphics/fivek/img/tiff16_{expert}/{name}.tif"
         value["camera"] = {
             "make": camera_info[name]["make"],
             "model": camera_info[name]["model"],
         }
         del value["files"]
 
-    ratios = [args.train_ratio, args.val_ratio, (1 - args.train_ratio - args.val_ratio)]
+    ratios = [
+        args.train_ratio, args.val_ratio,
+        (1 - args.train_ratio - args.val_ratio)
+    ]
     splitted_basenames = split_list(list=list(metadata.keys()), ratios=ratios)
-    for phase, basenames in zip(
-        ["training", "validation", "testing"], splitted_basenames
-    ):
+    for phase, basenames in zip(["training", "validation", "testing"],
+                                splitted_basenames):
         filepath = os.path.join(builder.dataset_dir, f"{phase}.json")
         partial = {}
         for name in basenames:

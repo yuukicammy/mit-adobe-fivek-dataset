@@ -79,7 +79,7 @@ def main():
     data_loader = DataLoader(
         MITAboveFiveK(root=args.root_dir, split="debug"),
         batch_size=None,
-        num_workers=2,  # multi-processing
+        num_workers=1,
     )
     for item in data_loader:
         # Some kind of process using FiveK

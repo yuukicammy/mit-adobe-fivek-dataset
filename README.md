@@ -125,7 +125,7 @@ CLASS MITAboveFiveK(torch.utils.data.dataset.Dataset)
 ```
 
 example
-```
+```python
 from torch.utils.data.dataloader import DataLoader
 from dataset.fivek import MITAboveFiveK
 

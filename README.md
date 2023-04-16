@@ -1,14 +1,16 @@
 # MIT-Adobe FiveK Dataset
 
-The MIT-Adobe FiveK Dataset is a publicly available dataset providing the following items.
+The MIT-Adobe FiveK [[1]]( #references ) Dataset is a publicly available dataset providing the following items.
 
-1. 5,000 raw images in DNG format
-2. retouched images of each raw image by five experts in TIFF format (16 bits per channel, ProPhoto RGB color space, and lossless compression)
+1. 5,000 RAW images in DNG format
+2. retouched images of each RAW image by five experts in TIFF format (16 bits per channel, ProPhoto RGB color space, and lossless compression)
 3. semantic information about each image
 
 The dataset was created by MIT and Adobe Systems, Inc., and is intended to provide a diverse and challenging set of images for testing image processing algorithms. The images were selected to represent a wide range of scenes, including landscapes, portraits, still lifes, and architecture. The images also vary in terms of lighting conditions, color balance, and exposure.
 
-The dataset is a valuable resource for the computer vision and image processing communities, providing a diverse and challenging set of images for benchmarking and evaluation.
+In practice, this dataset is often used after RAW images have undergone various processing steps. For example, RAW images are developed by adding noise, overexposure, and underexposure to emulate camera errors.
+
+However, the officially provided data set has a complex structure and is difficult to handle. This repository provides tools to easily download and use the datasets.
 
 ## Official Website
 
@@ -27,6 +29,17 @@ The dataset is a valuable resource for the computer vision and image processing 
 |[a1384-dvf_095.dng](https://data.csail.mit.edu/graphics/fivek/img/dng/a1384-dvf_095.dng)|![tiff16_a/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_A.jpg)|![tiff16_b/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_B.jpg)|![tiff16_c/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_C.jpg)|![tiff16_d/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_D.jpg)|![tiff16_e/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_E.jpg)|{ "location": "outdoor", "time": "day", "light": "sun_sky", "subject": "nature" }|Leica M8|
 |[a4607-050801_</br >080948__</br >I2E5512.dng](https://data.csail.mit.edu/graphics/fivek/img/dng/a4607-050801_080948__I2E5512.dng)|![tiff16_a/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_A.jpg)|![tiff16_b/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_B.jpg)|![tiff16_c/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_C.jpg)|![tiff16_d/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_D.jpg)|![tiff16_e/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_E.jpg)|{ "location": "indoor", "time": "day", "light": "artificial", "subject": "people" }|Canon EOS-1D Mark II|
 
+# References
+
+```
+@inproceedings{fivek,
+	author = "Vladimir Bychkovsky and Sylvain Paris and Eric Chan and Fr{\'e}do Durand",
+	title = "Learning Photographic Global Tonal Adjustment with a Database of Input / Output Image Pairs",
+	booktitle = "The Twenty-Fourth IEEE Conference on Computer Vision and Pattern Recognition",
+	year = "2011"
+}
+```
+
 # Code
 
 This repository provides tools to download and use MIT-Adobe FiveK Dataset in a format suitable for machine learning.
@@ -44,7 +57,9 @@ With Pytorch's DataLoader, preprocessing can be easily accomplished with multipr
 
 You can use as follows.
 
-NOTE: MUST set`batch_size` to `None` to simply load data to disable automatic batching.
+<span style="color:red">
+NOTE: For DataLoader, MUST set `batch_size` to `None` to disable automatic batching.
+</span>
 
 ```python
 from torch.utils.data.dataloader import DataLoader
@@ -55,10 +70,11 @@ metadata_loader = DataLoader(
     batch_size=None, num_workers=2)
 
 for item in metadata_loader:
-    # Processing as you want
+    # Processing as you want.
+    # Add noise, overexpose, underexpose, etc.
     print(item["files"]["dng"])
 ```
 
 ## Example
 
-Please see [sample code](./sample_preprocess.py) .
+Please see [sample code](./sample_process.py) .

@@ -94,6 +94,52 @@ CLASS MITAboveFiveK(torch.utils.data.dataset.Dataset)
 - experts (List[str]):  
     List of {'a', 'b', 'c', 'd', 'e'}. 'a' means 'Expert A' in the [website](https://data.csail.mit.edu/graphics/fivek/ ). If None or empty list, no expert data is used. Defaults to None.
 
+### Format to be acquired by DataLoader
+```
+{
+   "basename": "<(str) basename of the image>"
+    "files": {
+        "dng": "<(str) path of the local DNG file>", 
+        "tiff16": {
+            "a": "<(str) path of the local TIFF file retouched by Expert A>",
+            "b": "<(str) path of the local TIFF file retouched by Expert B>",
+            "c": "<(str) path of the local TIFF file retouched by Expert C>",
+            "d": "<(str) path of the local TIFF file retouched by Expert D>",
+            "e": "<(str) path of the local TIFF file retouched by Expert E>"
+        }
+    },
+    "categories": {
+        "location": "<(str) image categories extracted from the official resouece>",
+        "time": "<(str) image categories extracted from the official resouece>",
+        "light": "<(str) image categories extracted from the official resouece>",
+        "subject": "<(str) image categories extracted from the official resouece>"
+    },
+    "id": <(int) id extracted from basename>,
+    "license": "<(str) Adobe or AdobeMIT>",
+    "camera": {
+        "make": "<(str) maker name extracted from dng>",
+        "model": "<(str) camera model name extracted from dng>"
+    }
+}
+
+```
+
+example
+```
+from torch.utils.data.dataloader import DataLoader
+from dataset.fivek import MITAboveFiveK
+
+metadata_loader = DataLoader(
+    MITAboveFiveK(root="/datasets", split="debug", download=True, experts=["a", "b", "c", "d", "e"]),
+    batch_size=None, num_workers=1)
+item = next(iter(metadata_loader))
+print(item)
+# 
+# Output↓
+# {'categories': {'location': 'outdoor', 'time': 'day', 'light': 'sun_sky', 'subject': 'nature'}, 'id': 1384, 'license': 'Adobe', 'camera': {'make': 'Leica', 'model': 'M8'}, 'files': {'dng': '/datasets/MITAboveFiveK/raw/Leica_M8/a1384-dvf_095.dng', 'tiff16': {'a': '/datasets/MITAboveFiveK/processed/tiff16_a/a1384-dvf_095.tif', 'c': '/datasets/MITAboveFiveK/processed/tiff16_c/a1384-dvf_095.tif'}}, 'basename': 'a1384-dvf_095'}
+
+```
+
 ## Directory Structure
 
 When a dataset is downloaded using the `MITAboveFiveK` class, the files are saved in the following structure.
@@ -131,63 +177,3 @@ I provides json files that contain metadata for each image.
 | val | [validation.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/validation.json) | 500 |
 | test | [testing.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/testing.json) | 1000 |
 | debug | [debug.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/debug.json) | 9 |
-
-### Format of json files
-```
-{
-   "<basename-of-image>": { 
-        "urls": {
-            "dng": "<url to download DNG image from the official resource>", 
-            "tiff16": {
-                "a": "<url to download TIFF image retouched by Expert A>",
-                "b": "<url to download TIFF image retouched by Expert B>",
-                "c": "<url to download TIFF image retouched by Expert C>",
-                "d": "<url to download TIFF image retouched by Expert D>",
-                "e": "<url to download TIFF image retouched by Expert E>"
-            }
-        },
-        "categories": {
-            "location": "<categories extracted from the official resouece>",
-            "time": "<categories extracted from the official resouece>",
-            "light": "<categories extracted from the official resouece>",
-            "subject": "<categories extracted from the official resouece>"
-        },
-        "id": <integer id extracted from basename>,
-        "license": "<Adobe or AdobeMIT>",
-        "camera": {
-            "make": "<maker name extracted from dng>",
-            "model": "<camera model name extracted from dng>"
-        }
-    },
-}
-```
-
-example
-```
-{
-    "a1384-dvf_095": {
-        "urls": {
-            "dng": "http://data.csail.mit.edu/graphics/fivek/img/dng/a1384-dvf_095.dng",
-            "tiff16": {
-                "a": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_a/a1384-dvf_095.tif",
-                "b": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_b/a1384-dvf_095.tif",
-                "c": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_c/a1384-dvf_095.tif",
-                "d": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_d/a1384-dvf_095.tif",
-                "e": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_e/a1384-dvf_095.tif"
-            }
-        },
-        "categories": {
-            "location": "outdoor",
-            "time": "day",
-            "light": "sun_sky",
-            "subject": "nature"
-        },
-        "id": 1384,
-        "license": "Adobe",
-        "camera": {
-            "make": "Leica",
-            "model": "M8"
-        }
-    },
-}
-```

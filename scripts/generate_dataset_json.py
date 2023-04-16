@@ -48,6 +48,9 @@ from typing import List, Dict, Any
 import json
 import csv
 import random
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from dataset.fivek_builder import MITAboveFiveKBuilder
 
 random.seed(42)

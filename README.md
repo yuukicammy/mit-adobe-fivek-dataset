@@ -65,11 +65,11 @@ NOTE: For DataLoader, MUST set `batch_size` to `None` to disable automatic batch
 from torch.utils.data.dataloader import DataLoader
 from dataset.fivek import MITAboveFiveK
 
-metadata_loader = DataLoader(
+data_loader = DataLoader(
     MITAboveFiveK(root="path-to-dataset-root", split="train", download=True, experts=["a"]),
     batch_size=None, num_workers=2)
 
-for item in metadata_loader:
+for item in data_loader:
     # Processing as you want.
     # Add noise, overexpose, underexpose, etc.
     print(item["files"]["dng"])
@@ -129,10 +129,10 @@ example
 from torch.utils.data.dataloader import DataLoader
 from dataset.fivek import MITAboveFiveK
 
-metadata_loader = DataLoader(
+data_loader = DataLoader(
     MITAboveFiveK(root="/datasets", split="debug", download=True, experts=["a", "b", "c", "d", "e"]),
     batch_size=None, num_workers=1)
-item = next(iter(metadata_loader))
+item = next(iter(data_loader))
 print(item)
 # 
 # Output↓

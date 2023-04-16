@@ -1,6 +1,6 @@
 # MIT-Adobe FiveK Dataset
 
-The MIT-Adobe FiveK [[1]]( #references ) Dataset is a publicly available dataset providing the following items.
+The MIT-Adobe FiveK Dataset [[1]]( #references ) is a publicly available dataset providing the following items.
 
 1. 5,000 RAW images in DNG format
 2. retouched images of each RAW image by five experts in TIFF format (16 bits per channel, ProPhoto RGB color space, and lossless compression)
@@ -10,7 +10,7 @@ The dataset was created by MIT and Adobe Systems, Inc., and is intended to provi
 
 In practice, this dataset is often used after RAW images have undergone various processing steps. For example, RAW images are developed by adding noise, overexposure, and underexposure to emulate camera errors.
 
-However, the officially provided data set has a complex structure and is difficult to handle. This repository provides tools to easily download and use the datasets.
+However, the officially provided dataset has a complex structure and is difficult to handle. This repository provides tools to easily download and use the datasets.
 
 ## Official Website
 
@@ -42,10 +42,10 @@ However, the officially provided data set has a complex structure and is difficu
 
 # Code
 
-This repository provides tools to download and use MIT-Adobe FiveK Dataset in a format suitable for machine learning.
+This repository provides tools to download and use MIT-Adobe FiveK Dataset in a machine learning friendly manner.
 
-You can download the dataset with a single line in Python code. Also, you can use Pytorch's DetaLoader to iteratively retrieve data for your own use.
-With Pytorch's DataLoader, preprocessing can be easily accomplished with multiprocessing!
+You can download the dataset with a single line of Python code. Also, you can use Pytorch's DetaLoader to iteratively retrieve data for your own use.
+The processing can be easily accomplished with multiprocessing with Pytorch's DataLoader!
 
 ## Requirements
 - Python 3.7 or greater
@@ -78,3 +78,19 @@ for item in metadata_loader:
 ## Example
 
 Please see [sample code](./sample_process.py) .
+
+## API
+
+CLASS MITAboveFiveK(torch.utils.data.dataset.Dataset)  
+- - -
+   MITAboveFiveK(root: str, split: str, download: bool = False, experts: List[str] = None) -> None
+
+- root (str):  
+    The root directory where the MITAboveFiveK directory exists or to be created.
+- split (str):   
+    One of {'train', 'val', 'test', 'debug'}. 'debug' uses only 9 data contained in 'train'.
+- download (bool):  
+    If True, downloads the dataset from the official urls. Files that already exist locally will skip the download. Defaults to False.
+- experts (List[str]):  
+    List of {'a', 'b', 'c', 'd', 'e'}. 'a' means 'Expert A' in the website <https://data.csail.mit.edu/graphics/fivek/>. If None or empty list, no expert data is used. Defaults to None.
+

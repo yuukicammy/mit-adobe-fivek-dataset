@@ -8,11 +8,6 @@ The MIT-Adobe FiveK Dataset [[1]]( #references ) is a publicly available dataset
 
 The dataset was created by MIT and Adobe Systems, Inc., and is intended to provide a diverse and challenging set of images for testing image processing algorithms. The images were selected to represent a wide range of scenes, including landscapes, portraits, still lifes, and architecture. The images also vary in terms of lighting conditions, color balance, and exposure.
 
-The official archive has a complicated directory structure and that expert images need to be downloaded individually. To simplify this process, I created a tool that allows all data to be downloaded with just a single line of python code.
-
-In practice, the dataset is often used after RAW images have undergone various processing steps, such as adding noise, overexposure, and underexposure to emulate camera errors. 
-This tool also allows for these kinds of processing to be easily performed using PyTorch's DataLoader.
-
 ## Official Website
 
 [MIT-Adobe FiveK Dataset](https://data.csail.mit.edu/graphics/fivek/)
@@ -45,7 +40,11 @@ This tool also allows for these kinds of processing to be easily performed using
 
 This repository provides tools to download and use MIT-Adobe FiveK Dataset in a machine learning friendly manner.
 
-You can download the dataset with a single line of Python code. Also, you can use Pytorch's DetaLoader to iteratively retrieve data for your own use.
+The official archive has a complicated directory structure and that expert images need to be downloaded individually. To simplify this process, I created a tool that allows all data to be downloaded with just a single line of python code. 
+
+In practice, the dataset is often used after RAW images have undergone various processing steps, such as adding noise, overexposure, and underexposure to emulate camera errors. 
+This tool also allows for these kinds of processing to be easily performed using PyTorch's DataLoader.
+You can iteratively retrieve data via Pytorch's DetaLoader for your own use.
 
 ## Requirements
 - Python 3.7 or greater

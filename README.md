@@ -8,9 +8,10 @@ The MIT-Adobe FiveK Dataset [[1]]( #references ) is a publicly available dataset
 
 The dataset was created by MIT and Adobe Systems, Inc., and is intended to provide a diverse and challenging set of images for testing image processing algorithms. The images were selected to represent a wide range of scenes, including landscapes, portraits, still lifes, and architecture. The images also vary in terms of lighting conditions, color balance, and exposure.
 
-In practice, this dataset is often used after RAW images have undergone various processing steps. For example, RAW images are developed by adding noise, overexposure, and underexposure to emulate camera errors.
+The official archive has a complicated directory structure and that expert images need to be downloaded individually. To simplify this process, I created a tool that allows all data to be downloaded with just a single line of python code.
 
-However, the officially provided dataset has a complex structure and is difficult to handle. This repository provides tools to easily download and use the datasets.
+In practice, the dataset is often used after RAW images have undergone various processing steps, such as adding noise, overexposure, and underexposure to emulate camera errors. 
+This tool also allows for these kinds of processing to be easily performed using PyTorch's DataLoader.
 
 ## Official Website
 
@@ -45,7 +46,6 @@ However, the officially provided dataset has a complex structure and is difficul
 This repository provides tools to download and use MIT-Adobe FiveK Dataset in a machine learning friendly manner.
 
 You can download the dataset with a single line of Python code. Also, you can use Pytorch's DetaLoader to iteratively retrieve data for your own use.
-The processing can be easily accomplished with multiprocessing with Pytorch's DataLoader!
 
 ## Requirements
 - Python 3.7 or greater
@@ -192,3 +192,11 @@ I provides json files that contain metadata for each image.
 | val | [validation.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/validation.json) | 500 ||
 | test | [testing.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/testing.json) | 1000 ||
 | debug | [debug.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/debug.json) | 9 |Subset of train|
+
+## Advanced Usage
+
+The following steps can be taken to easily convert your processing to multi-processing.
+
+1. add the process you want to apply to the dataset (converting RAW to sRGB, adding noise, etc.) in the method `__getitem__` of the `MITAboveFiveK` class.
+
+2. specify the number of subprocess in `num_wokers` of DataLoader (e.g. num_worders=4)

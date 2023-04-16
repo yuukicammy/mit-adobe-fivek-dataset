@@ -92,5 +92,5 @@ CLASS MITAboveFiveK(torch.utils.data.dataset.Dataset)
 - download (bool):  
     If True, downloads the dataset from the official urls. Files that already exist locally will skip the download. Defaults to False.
 - experts (List[str]):  
-    List of {'a', 'b', 'c', 'd', 'e'}. 'a' means 'Expert A' in the website <https://data.csail.mit.edu/graphics/fivek/>. If None or empty list, no expert data is used. Defaults to None.
+    List of {'a', 'b', 'c', 'd', 'e'}. 'a' means 'Expert A' in the [website](https://data.csail.mit.edu/graphics/fivek/ ). If None or empty list, no expert data is used. Defaults to None.
 

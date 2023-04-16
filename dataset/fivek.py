@@ -33,23 +33,23 @@ class MITAboveFiveK(Dataset):
             .. code::
                 <root>
                 └── MITAboveFiveK
-                    └─ raw
-                        ├── Canon_EOS-1D_Mark_II
-                            ├── a1527-20041010_072954__E6B5620.dng
-                            └── ...
-                        ...
-                        ├── Sony_DSLR-A900
-                            ├── 4337-kme_1082.dng
-                            └── ...
-                    └── processed
-                        ├── tiff16_a
-                        |   ├── a0001-jmac_DSC1459.tif
-                        |   └── ...
-                        ├── tiff16_b
-                        └── ...
-                    ├── trainint.json
+                    ├─ raw
+                    |   ├── Canon_EOS-1D_Mark_II
+                    |   |   ├── a1527-20041010_072954__E6B5620.dng
+                    |   |   └── ...
+                    |   ...
+                    |   └── Sony_DSLR-A900
+                    |       ├── 4337-kme_1082.dng
+                    |       └── ...
+                    ├── processed
+                    |   ├── tiff16_a
+                    |   |   ├── a0001-jmac_DSC1459.tif
+                    |   |   └── ...
+                    |   ├── tiff16_b
+                    |   └── ...
+                    ├── training.json
                     ├── validation.json
-                    ├── testint.json
+                    ├── testing.json
                     └── debugging.json
     Raises:
         RuntimeError: Error rises if dataset does not exist or the download failed.

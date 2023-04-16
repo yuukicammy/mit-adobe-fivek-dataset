@@ -90,7 +90,7 @@ class TestMITAboveFiveKBuilderMetadata(FiveKTestCase):
         builder = MITAboveFiveKBuilder(os.path.join("..", "MITAboveFiveK"), "archive")
         metadata = builder.metadata()
         assert len(metadata.keys()) == 5000
-        self.check_metadata({metadata["metadata)
+        self.check_metadata(metadata)
 
 
 if __name__ == "__main__":

@@ -94,4 +94,100 @@ CLASS MITAboveFiveK(torch.utils.data.dataset.Dataset)
 - experts (List[str]):  
     List of {'a', 'b', 'c', 'd', 'e'}. 'a' means 'Expert A' in the [website](https://data.csail.mit.edu/graphics/fivek/ ). If None or empty list, no expert data is used. Defaults to None.
 
+## Directory Structure
+
+When a dataset is downloaded using the `MITAboveFiveK` class, the files are saved in the following structure.
+RAW images are stored in a directory for each camera model.
+
+```
+<root>
+└── MITAboveFiveK
+    ├─ raw
+    |   ├── Canon_EOS-1D_Mark_II
+    |   |   ├── a1527-20041010_072954__E6B5620.dng
+    |   |   └── ...
+    |   ...
+    |   └── Sony_DSLR-A900
+    |       ├── 4337-kme_1082.dng
+    |       └── ...
+    ├── processed
+    |   ├── tiff16_a
+    |   |   ├── a0001-jmac_DSC1459.tif
+    |   |   └── ...
+    |   ├── tiff16_b
+    |   └── ...
+    ├── training.json
+    ├── validation.json
+    ├── testing.json
+    └── debugging.json
+```
+
 ## Resources
+I provides json files that contain metadata for each image.
+
+|Split| Json File | Number of data |
+|---|---|---|
+| train | [training.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/training.json) | 3500 |
+| val | [validation.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/validation.json) | 500 |
+| test | [testing.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/testing.json) | 1000 |
+| debug | [debug.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/debug.json) | 9 |
+
+### Format of json files
+```
+{
+   "<basename-of-image>": { 
+        "urls": {
+            "dng": "<url to download DNG image from the official resource>", 
+            "tiff16": {
+                "a": "<url to download TIFF image retouched by Expert A>",
+                "b": "<url to download TIFF image retouched by Expert B>",
+                "c": "<url to download TIFF image retouched by Expert C>",
+                "d": "<url to download TIFF image retouched by Expert D>",
+                "e": "<url to download TIFF image retouched by Expert E>"
+            }
+        },
+        "categories": {
+            "location": "<categories extracted from the official resouece>",
+            "time": "<categories extracted from the official resouece>",
+            "light": "<categories extracted from the official resouece>",
+            "subject": "<categories extracted from the official resouece>"
+        },
+        "id": <integer id extracted from basename>,
+        "license": "<Adobe or AdobeMIT>",
+        "camera": {
+            "make": "<maker name extracted from dng>",
+            "model": "<camera model name extracted from dng>"
+        }
+    },
+}
+```
+
+example
+```
+{
+    "a1384-dvf_095": {
+        "urls": {
+            "dng": "http://data.csail.mit.edu/graphics/fivek/img/dng/a1384-dvf_095.dng",
+            "tiff16": {
+                "a": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_a/a1384-dvf_095.tif",
+                "b": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_b/a1384-dvf_095.tif",
+                "c": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_c/a1384-dvf_095.tif",
+                "d": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_d/a1384-dvf_095.tif",
+                "e": "http://data.csail.mit.edu/graphics/fivek/img/tiff16_e/a1384-dvf_095.tif"
+            }
+        },
+        "categories": {
+            "location": "outdoor",
+            "time": "day",
+            "light": "sun_sky",
+            "subject": "nature"
+        },
+        "id": 1384,
+        "license": "Adobe",
+        "camera": {
+            "make": "Leica",
+            "model": "M8"
+        }
+    },
+}
+```

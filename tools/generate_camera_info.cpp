@@ -9,6 +9,16 @@
  * This program lists camera information of DNG files under the specified
  * directory. The camera information is output in a CSV file.
  *
+ * Usage:
+ *    Genrate Camera Information [OPTION...]
+ *
+ *    -r, --root_dir arg  Path of the root directory where DNG files are
+ *                        searched. (default:
+ *                        /datasets/MITAdobeFiveK/raw/fivek_dataset/raw_photos)
+ *    -o, --outfile arg   Path of the output CSV file. (default:
+ *                        ./data/camera_models.csv)
+ *    -h, --help          Print usage.
+ *
  */
 
 #include "cxxopts.hpp"
@@ -85,9 +95,12 @@ int main(int argc, char *argv[]) {
       "directory. The camera information is output in a CSV file.\n");
   options.add_options()(
       "r,root_dir", "Path of the root directory where DNG files are searched.",
-      cxxopts::value<std::string>()->default_value(""));
-  options.add_options()("o,outfile", "Path of the output CSV file.",
-                        cxxopts::value<std::string>()->default_value(""));
+      cxxopts::value<std::string>()->default_value(
+          "/datasets/MITAdobeFiveK/raw/fivek_dataset/raw_photos"));
+  options.add_options()(
+      "o,outfile", "Path of the output CSV file.",
+      cxxopts::value<std::string>()->default_value("./data/camera_models.csv"));
+  options.add_options()("h,help", "Print usage.");
 
   auto args = options.parse(argc, argv);
   if (args.count("help")) {
@@ -122,6 +135,8 @@ int main(int argc, char *argv[]) {
     return 0;
 
   } catch (std::exception &e) {
+    options.show_positional_help();
+    std::cout << options.help() << std::endl;
     std::cerr << e.what() << std::endl;
     return 1;
   }

@@ -1,20 +1,20 @@
-"""
-Script to generate a json files describing the MIT-Adobe FiveK Dataset \
-    items from the data downloaded and extracted from the archive.
+"""Sample Processing with MITAboveFiveK
+
+Script to convert RAW images of MIT-Above FiveK Dataset to 8-bit sRGB with RawPy.
 
 Usage:
-    python generate_dataset_json.py [-h] dir_root camera_models train_ratio val_ratio
+    python sample_processing.py [-h] dir_root
 
 Arguments:
-    dir_root Path of the root directory where the tar file was extracted. \
-            The program generats `training.json`, `validation.json`, and `testing.json` files \
-            and stores in this directory.
-    camera_models  Path of the csv file listing a file id and its camera information.
-    train_ratio    Percentage of data used for `training` out of total data.
-    vaL_ratio    Percentage of data used for `validation` out of total data.
+    [Positional]
+    dir_root    Path of the root directory where the directory 'MITAboveFiveK' exists.
+    
+    [Options]
+    --to_dir    Path to a directory to save developed images. If None, save to `root_dir`/MITAboveFiveK/processed/sRGB/.
+    -h, --help  Show the help message and exit.
 
 Example:
-    python generate_dataset_json.py  ../data/MITAboveFiveK ../data/camera_models.csv 0.7 0.1
+    python sample_processing.py  ./data/MITAboveFiveK 
 
 Note:
     Please see the official website for more information.
@@ -23,7 +23,6 @@ Note:
 
 import os
 import argparse
-from typing import List, Dict, Any
 import rawpy
 from torch.utils.data.dataloader import DataLoader
 from PIL import Image

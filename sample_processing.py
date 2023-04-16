@@ -14,11 +14,32 @@ Arguments:
     -h, --help  Show the help message and exit.
 
 Example:
-    python sample_processing.py  ./data/MITAboveFiveK 
+    python sample_processing.py  ./data
 
 Note:
     Please see the official website for more information.
     MIT-Adobe FiveK Dataset <https://data.csail.mit.edu/graphics/fivek/>
+
+License:
+    Copyright (c) 2023 yuukicammy
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
 """
 
 import os
@@ -55,7 +76,7 @@ def main():
     metadata_loader = DataLoader(
         MITAboveFiveK(root=args.root_dir, split="debug"),
         batch_size=None,
-        num_workers=2,
+        num_workers=2,  # multi-processing
     )
     for item in metadata_loader:
         # Some kind of process using FiveK

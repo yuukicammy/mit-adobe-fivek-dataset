@@ -55,6 +55,16 @@ The processing can be easily accomplished with multiprocessing with Pytorch's Da
 
 ## Usage
 
+1. locate [`dataset/fivek.py`](https://github.com/yuukicammy/mit-adobe-fivek-dataset/raw/master/dataset/fivek.py) and [`dataset/fivek_builder.py`](https://github.com/yuukicammy/mit-adobe-fivek-dataset/raw/master/dataset/fivek_builder.py) in your program.
+
+2. import `MITAboveFiveK` in your python code.
+
+3. download the dataset by initializing a `MITAboveFiveK` instance with `download=True`.
+```
+fivek = MITAboveFiveK(root="/datasets", split="debug", download=True, experts=["a"])
+```
+4. data can be iteratively obtained via PyTorch's DataLoader.
+
 You can use as follows.
 
 <span style="color:red">

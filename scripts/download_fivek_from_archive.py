@@ -7,14 +7,14 @@ The MIT-Adobe FiveK Dataset is a collection that includes the following items:
 This script downloads the dataset and extracts it.
 
 Usage:
-    python download_fivek_from_archive.py [-h] root [{A,B,C,D,E} ...]
+    python download_fivek_from_archive.py [-h] root [{a,b,c,d,e} ...]
 
 Arguments:
-  root         Root directory where the dataset will be downloaded and extracted. The data will be saved under `<root>/MITAboveFiveK/raw`. 
-  {A,B,C,D,E}  List of experts who adjusted tone of the photos to download. Experts are 'A', 'B', 'C', 'D', and/or 'E'.
+  root         Root directory. The data will be saved under `<root>/MITAboveFiveK/raw`. 
+  {a,b,c,d,e}  List of experts who adjusted tone of the photos to download. Experts are 'a', 'b', 'c', 'd', and/or 'e'.
 
 Example:
-    python download_fivek_from_archive.py ../data A
+    python download_fivek_from_archive.py ../data a
 
 Note:
     Please see the official website for more information.
@@ -43,31 +43,32 @@ License:
 """
 
 import argparse
-import sys
-
 from dataset.fivek_builder import MITAboveFiveKBuilder
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Download the MIT-Adobe FiveK Dataset <https://data.csail.mit.edu/graphics/fivek/>."
+        description=
+        "Download the MIT-Adobe FiveK Dataset <https://data.csail.mit.edu/graphics/fivek/>."
     )
     parser.add_argument(
         "dir",
         type=str,
-        help="A directory where the dataset will be downloaded and extracted. The data will be saved under `<root>/MITAboveFiveK/raw`.",
+        help=
+        "A directory where the dataset will be downloaded and extracted. The data will be saved under `<root>/MITAboveFiveK/raw`.",
     )
     parser.add_argument(
-        "experts",
+        "--experts",
         nargs="*",
-        choices=["a", "b", "c", "d", "e", []],
-        help="List of experts who adjusted tone of the photos to download. Experts are 'a', 'b', 'c', 'd', and/or 'e'.",
+        choices=["a", "b", "c", "d", "e"],
+        help=
+        "List of experts who adjusted tone of the photos to download. Experts are 'a', 'b', 'c', 'd', and/or 'e'.",
         default=None,
     )
     args = parser.parse_args()
-    builder = MITAboveFiveKBuilder(
-        dataset_dir=args.dir, config_name="archive", experts=args.experts
-    )
+    builder = MITAboveFiveKBuilder(dataset_dir=args.dir,
+                                   config_name="archive",
+                                   experts=args.experts)
     builder.build()
 
 

@@ -15,18 +15,10 @@ class MITAboveFiveK(Dataset):
     """`MIT-Adobe FiveK <https://data.csail.mit.edu/graphics/fivek/>`_Dataset.
 
     Args:
-        root (string): Root directory in which MITAboveFiveK directory to be created.
-        split (str):  One of {'train', 'val', 'test', 'debug'}.
-        transform (callable, optional): A function/transform that takes in an PIL image
-            and returns a transformed version. E.g, ``transforms.RandomCrop``
-        target_transform (callable, optional): A function/transform that takes in the
-            target and transforms it.
-        download (bool, optional): If true, downloads the dataset from the internet and
-            puts it in root directory. If dataset is already downloaded, it is not
-            downloaded again.
-        experts (List[str], optional): List of experts to download. Experts are 'a', 'b', 'c', 'd', and/or 'e'.
-            'a' means 'Expert A' in the website <https://data.csail.mit.edu/graphics/fivek/>.
-            If None, no expert data will be downloaded.
+            root (str): The root directory where the 'MITAboveFiveK' directory exists or to be created.
+            split (str): One of {'train', 'val', 'test', 'debug'}. 'debug' uses only 9 data contained in 'train'.
+            download (bool): If True, downloads the dataset from the official urls. Files that already exist locally will skip the download. Defaults to False.
+            experts (List[str]): List of {'a', 'b', 'c', 'd', 'e'}. 'a' means 'Expert A' in the website <https://data.csail.mit.edu/graphics/fivek/>. Defaults to None.
 
     Notes:
             Expects the following folder structure if download=False:
@@ -52,7 +44,8 @@ class MITAboveFiveK(Dataset):
                     ├── testing.json
                     └── debugging.json
     Raises:
-        RuntimeError: Error rises if dataset does not exist or the download failed.
+            ValueError: If the value of split is not one of {'train', 'val', 'test', 'debug'}.
+            RuntimeError: If dataset not found, or download failed.
     """
 
     def __init__(

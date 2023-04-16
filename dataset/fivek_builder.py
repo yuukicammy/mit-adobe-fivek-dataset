@@ -35,12 +35,11 @@ class MITAboveFiveKBuilder:
         config_name (str): The name of the configuration to use. Defaults to 'per_camera_model'.
         experts (List[str]): A list of expert names. Experts are 'a', 'b', 'c', 'd', and/or 'e'. Defaults to None.
         redownload (bool): Whether to force data to be re-downloaded, even if it already exists. Defaults to False.
-        json_path (str): The path to the JSON file containing metadata about the dataset. Defaults to None.
 
     Attributes:
         dataset_dir (str): The top directory of the dataset.
-        experts (List[str]): A list of expert names.
-        config (MITAboveFiveKBuilderConfig): The configuration to use.
+        config (str): The configuration name to use.
+        experts (List[str]): A list of expert names. Any of {'a', 'b', 'c', 'd', 'e'}.
         metadata (dict): A dictionary containing metadata about the dataset.
         redownload (bool): Whether to force data to be re-downloaded, even if it already exists.
 

@@ -136,8 +136,13 @@ item = next(iter(metadata_loader))
 print(item)
 # 
 # Output↓
-# {'categories': {'location': 'outdoor', 'time': 'day', 'light': 'sun_sky', 'subject': 'nature'}, 'id': 1384, 'license': 'Adobe', 'camera': {'make': 'Leica', 'model': 'M8'}, 'files': {'dng': '/datasets/MITAboveFiveK/raw/Leica_M8/a1384-dvf_095.dng', 'tiff16': {'a': '/datasets/MITAboveFiveK/processed/tiff16_a/a1384-dvf_095.tif', 'c': '/datasets/MITAboveFiveK/processed/tiff16_c/a1384-dvf_095.tif'}}, 'basename': 'a1384-dvf_095'}
-
+# {'categories': {'location': 'outdoor', 'time': 'day', 'light': 'sun_sky', 'subject': 'nature'}, 
+#  'id': 1384, 'license': 'Adobe', 
+#  'camera': {'make': 'Leica', 'model': 'M8'}, 
+#  'files': {'dng': '/datasets/MITAboveFiveK/raw/Leica_M8/a1384-dvf_095.dng', 
+#            'tiff16': {'a': '/datasets/MITAboveFiveK/processed/tiff16_a/a1384-dvf_095.tif', 
+#                       'c': '/datasets/MITAboveFiveK/processed/tiff16_c/a1384-dvf_095.tif'}}, 
+#  'basename': 'a1384-dvf_095'}
 ```
 
 ## Directory Structure
@@ -171,9 +176,9 @@ RAW images are stored in a directory for each camera model.
 ## Resources
 I provides json files that contain metadata for each image.
 
-|Split| Json File | Number of data |
-|---|---|---|
-| train | [training.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/training.json) | 3500 |
-| val | [validation.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/validation.json) | 500 |
-| test | [testing.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/testing.json) | 1000 |
-| debug | [debug.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/debug.json) | 9 |
+|Split| Json File | Number of data | Note|
+|---|---|---|---|
+| train | [training.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/training.json) | 3500 ||
+| val | [validation.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/validation.json) | 500 ||
+| test | [testing.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/testing.json) | 1000 ||
+| debug | [debug.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/debug.json) | 9 |Subset of train|

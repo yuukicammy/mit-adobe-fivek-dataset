@@ -30,7 +30,7 @@ This tool also allows for these kinds of processing to be easily performed using
 |[a1384-dvf_095.dng](https://data.csail.mit.edu/graphics/fivek/img/dng/a1384-dvf_095.dng)|![tiff16_a/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_A.jpg)|![tiff16_b/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_B.jpg)|![tiff16_c/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_C.jpg)|![tiff16_d/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_D.jpg)|![tiff16_e/a1384-dvf_095](./data/thumbnails/a1384-dvf_095_E.jpg)|{ "location": "outdoor", "time": "day", "light": "sun_sky", "subject": "nature" }|Leica M8|
 |[a4607-050801_</br >080948__</br >I2E5512.dng](https://data.csail.mit.edu/graphics/fivek/img/dng/a4607-050801_080948__I2E5512.dng)|![tiff16_a/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_A.jpg)|![tiff16_b/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_B.jpg)|![tiff16_c/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_C.jpg)|![tiff16_d/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_D.jpg)|![tiff16_e/a4607-050801_080948__I2E5512](./data/thumbnails/a4607-050801_080948__I2E5512_E.jpg)|{ "location": "indoor", "time": "day", "light": "artificial", "subject": "people" }|Canon EOS-1D Mark II|
 
-# References
+## References
 
 ```
 @inproceedings{fivek,
@@ -41,7 +41,7 @@ This tool also allows for these kinds of processing to be easily performed using
 }
 ```
 
-# Code
+# Tools for MIT-Adobe FiveK Dataset
 
 This repository provides tools to download and use MIT-Adobe FiveK Dataset in a machine learning friendly manner.
 

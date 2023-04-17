@@ -76,7 +76,7 @@ from dataset.fivek import MITAboveFiveK
 
 data_loader = DataLoader(
     MITAboveFiveK(root="path-to-dataset-root", split="train", download=True, experts=["a"]),
-    batch_size=None, num_workers=2)
+    batch_size=None, num_workers=1)
 
 for item in data_loader:
     # Processing as you want.
@@ -139,7 +139,7 @@ from torch.utils.data.dataloader import DataLoader
 from dataset.fivek import MITAboveFiveK
 
 data_loader = DataLoader(
-    MITAboveFiveK(root="/datasets", split="debug", download=True, experts=["a", "b", "c", "d", "e"]),
+    MITAboveFiveK(root="/datasets", split="debug", download=True, experts=["a", "c"]),
     batch_size=None, num_workers=1)
 item = next(iter(data_loader))
 print(item)

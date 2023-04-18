@@ -55,7 +55,7 @@ class TestMITAboveFiveKBuilderBuild(FiveKTestCase):
         shutil.rmtree(self.cache_dir)
         builder = MITAboveFiveKBuilder(self.dataset_dir,
                                        config_name="per_camera_model")
-        res = builder.build(split="debug")
+        res = builder.build(split="debug", num_workers=self.download_workers)
         assert len(res.keys()) == 9
         self.check_metadata(res)
 
@@ -87,7 +87,7 @@ class TestMITAboveFiveKBuilderPath(FiveKTestCase):
         )
         builder = MITAboveFiveKBuilder(self.dataset_dir,
                                        config_name="per_camera_model")
-        builder.build("debug")
+        builder.build(split="debug", num_workers=self.download_workers)
         actual = builder.raw_file_path("a0298-IMG_5043")
         assert expected == actual
 
@@ -100,7 +100,7 @@ class TestMITAboveFiveKBuilderPath(FiveKTestCase):
                 config_name=config.name,
                 experts=["e"],
             )
-            builder.build("debug")
+            builder.build(split="debug", num_workers=self.download_workers)
             actual = builder.expert_file_path("a0298-IMG_5043", "e")
             assert expected == actual
 

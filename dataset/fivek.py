@@ -68,9 +68,12 @@ class MITAboveFiveK(Dataset):
             RuntimeError: If dataset not found, or download failed.
     """
 
-    def __init__(
-        self, root: str, split: str, download: bool = False, experts: List[str] = None
-    ) -> None:
+    def __init__(self,
+                 root: str,
+                 split: str,
+                 download: bool = False,
+                 experts: List[str] = None,
+                 download_workers: int = 1) -> None:
         # root directory of datasets
         self.root = root
 
@@ -95,7 +98,7 @@ class MITAboveFiveK(Dataset):
                 dataset_dir=self.dataset_dir,
                 config_name="per_camera_model",
                 experts=self.experts,
-            ).build(split=self.split)
+            ).build(split=self.split, num_workers=download_workers)
         else:
             self.metadata = MITAboveFiveKBuilder(
                 dataset_dir=self.dataset_dir,
@@ -127,7 +130,8 @@ class MITAboveFiveK(Dataset):
             if not os.path.isfile(self.metadata[basename]["files"]["dng"]):
                 return False
             for e in self.experts:
-                if not os.path.isfile(self.metadata[basename]["files"]["tiff16"][e]):
+                if not os.path.isfile(
+                        self.metadata[basename]["files"]["tiff16"][e]):
                     return False
         return True
 

@@ -27,6 +27,7 @@ import json
 import tarfile
 import urllib3
 import requests
+from tqdm.contrib.concurrent import process_map  # tqdm>=4.42.0
 from tqdm import tqdm
 
 
@@ -121,32 +122,36 @@ class MITAboveFiveKBuilder:
         MITAboveFiveKBuilderConfig(
             name="per_camera_model",
             version="0.1.0",
-            description="This configuration saves DNG files in a separate directory for each camera model.",
+            description=
+            "This configuration saves DNG files in a separate directory for each camera model.",
         ),
         MITAboveFiveKBuilderConfig(
             name="archive",
             version="0.1.0",
-            description="This configuration downloads extracts a tar archive and then downloads expert images from ",
+            description=
+            "This configuration downloads extracts a tar archive and then downloads expert images from ",
         ),
     ]
     DEFAULT_CONFIG_NAME = "per_camera_model"
 
     JSON_URLS = {
-        "train": "https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/training.json",
-        "val": "https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/validation.json",
-        "test": "https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/testing.json",
-        "debug": "https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/debugging.json",
+        "train":
+        "https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/training.json",
+        "val":
+        "https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/validation.json",
+        "test":
+        "https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/testing.json",
+        "debug":
+        "https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/debugging.json",
     }
 
     SPLITS = ["train", "val", "test", "debug"]
 
-    def __init__(
-        self,
-        dataset_dir: str,
-        config_name: str = "per_camera_model",
-        experts: List[str] = None,
-        redownload=False,
-    ):
+    def __init__(self,
+                 dataset_dir: str,
+                 config_name: str = "per_camera_model",
+                 experts: List[str] = None,
+                 redownload: bool = False):
         self.dataset_dir = dataset_dir
         self.redownload = redownload
         self.experts = experts if experts else []
@@ -161,7 +166,8 @@ class MITAboveFiveKBuilder:
         os.makedirs(self.dataset_dir, exist_ok=True)
         self.download_json()
 
-    def _create_builder_config(self, config_name: str) -> MITAboveFiveKBuilderConfig:
+    def _create_builder_config(self,
+                               config_name: str) -> MITAboveFiveKBuilderConfig:
         """
         Returns the named configuration.
 
@@ -208,10 +214,12 @@ class MITAboveFiveKBuilder:
         """
         basenames = []
         for lfile in ["filesAdobe.txt", "filesAdobeMIT.txt"]:
-            file_path = os.path.join(self.dataset_dir, "raw", "fivek_dataset", lfile)
+            file_path = os.path.join(self.dataset_dir, "raw", "fivek_dataset",
+                                     lfile)
             if os.path.isfile(file_path):
                 with open(file_path, "r", encoding="ascii") as file:
-                    basenames += list(map(lambda s: s.rstrip("\n"), file.readlines()))
+                    basenames += list(
+                        map(lambda s: s.rstrip("\n"), file.readlines()))
         basenames.sort()
         categories = self._load_category_file()
         licenses = self._load_license_file()
@@ -220,10 +228,14 @@ class MITAboveFiveKBuilder:
             metadata[basename] = {
                 "id": int(basename.split("-")[0][1:]),
                 "urls": {
-                    "dng": f"http://data.csail.mit.edu/graphics/fivek/img/dng/{basename}.dng",
+                    "dng":
+                    f"http://data.csail.mit.edu/graphics/fivek/img/dng/{basename}.dng",
                     "tiff16": {},
                 },
-                "files": {"dng": self.raw_file_path(basename), "tiff16": {}},
+                "files": {
+                    "dng": self.raw_file_path(basename),
+                    "tiff16": {}
+                },
                 "categories": {
                     "location": categories[basename][0],
                     "time": categories[basename][1],
@@ -234,32 +246,31 @@ class MITAboveFiveKBuilder:
             }
             for e in ["a", "b", "c", "d", "e"]:
                 metadata[basename]["urls"]["tiff16"][
-                    e
-                ] = f"https://data.csail.mit.edu/graphics/fivek/img/tiff16_{e}/{basename}.tif"
+                    e] = f"https://data.csail.mit.edu/graphics/fivek/img/tiff16_{e}/{basename}.tif"
             for e in self.experts:
-                metadata[basename]["files"]["tiff16"][e] = self.expert_file_path(
-                    basename, e
-                )
+                metadata[basename]["files"]["tiff16"][
+                    e] = self.expert_file_path(basename, e)
         return metadata
 
     def _load_license_file(self) -> Dict[str, List[str]]:
         files_license = {}
         for fid in load_list(
-            os.path.join(self.dataset_dir, "raw", "fivek_dataset", "filesAdobeMIT.txt")
-        ):
+                os.path.join(self.dataset_dir, "raw", "fivek_dataset",
+                             "filesAdobeMIT.txt")):
             files_license[fid] = "AdobeMIT"
         for fid in load_list(
-            os.path.join(self.dataset_dir, "raw", "fivek_dataset", "filesAdobe.txt")
-        ):
+                os.path.join(self.dataset_dir, "raw", "fivek_dataset",
+                             "filesAdobe.txt")):
             files_license[fid] = "Adobe"
         return files_license
 
     def _load_category_file(self) -> Dict[str, List[str]]:
         categories = {}
         with open(
-            os.path.join(self.dataset_dir, "raw", "fivek_dataset", "categories.txt"),
-            "r",
-            encoding="ascii",
+                os.path.join(self.dataset_dir, "raw", "fivek_dataset",
+                             "categories.txt"),
+                "r",
+                encoding="ascii",
         ) as file:
             lines = file.readlines()
             for line in lines:
@@ -286,11 +297,25 @@ class MITAboveFiveKBuilder:
         else:
             for sp in self.SPLITS:
                 if os.path.isfile(self.json_files[sp]):
-                    with open(self.json_files[sp], "r", encoding="utf-8") as jf:
+                    with open(self.json_files[sp], "r",
+                              encoding="utf-8") as jf:
                         metadata.update(json.load(jf))
         return metadata
 
-    def build(self, split: str = None) -> Dict[str, Any]:
+    def _download_raw_file(self, basename):
+        os.makedirs(self.raw_file_dir(basename), exist_ok=True)
+        item = self._metadata[basename]
+        filepath = os.path.join(self.raw_file_dir(basename), f"{basename}.dng")
+        if self.redownload or not os.path.isfile(filepath):
+            if not download(url=item["urls"]["dng"], filepath=filepath):
+                raise RuntimeError(
+                    f"Error downloading a file from {item['urls']['dng']}.")
+        if "files" in item.keys():
+            item["files"]["dng"] = filepath
+        else:
+            item["files"] = {"dng": filepath}
+
+    def build(self, split: str = None, num_workers: int = 1) -> Dict[str, Any]:
         """
         Builds the dataset.
 
@@ -328,8 +353,8 @@ class MITAboveFiveKBuilder:
         self._metadata = self._load_json(split)
         if self.config.name == "archive" and split == "debug":
             return self.metadata(split)
-        self.download_raw()
-        self.download_experts()
+        self.download_raw(num_workers)
+        self.download_experts(num_workers)
         if not self._check_exists():
             raise RuntimeError("Error building dataset.")
         return self.metadata(split)
@@ -372,9 +397,8 @@ class MITAboveFiveKBuilder:
                     "tiff16": {},
                 }
                 for e in self.experts:
-                    metadata[basename]["files"]["tiff16"][e] = self.expert_file_path(
-                        basename, e
-                    )
+                    metadata[basename]["files"]["tiff16"][
+                        e] = self.expert_file_path(basename, e)
             self._metadata = tmp
         return metadata
 
@@ -383,7 +407,7 @@ class MITAboveFiveKBuilder:
             if self.redownload or not os.path.isfile(path):
                 download(self.JSON_URLS[key], path)
 
-    def download_raw(self) -> None:
+    def download_raw(self, num_workers: int = 1) -> None:
         """
         Downloads the raw dataset.
 
@@ -398,21 +422,21 @@ class MITAboveFiveKBuilder:
                 print("Downloading the archie...")
                 url = "https://data.csail.mit.edu/graphics/fivek/fivek_dataset.tar"
                 if not download(url, archive_path):
-                    raise RuntimeError(f"Error downloading an archive from {url}.")
+                    raise RuntimeError(
+                        f"Error downloading an archive from {url}.")
                 print("Extracting the archive...")
                 extract_archive(archive_path, raw_dir)
 
         else:
             raw_dir = os.path.join(self.dataset_dir, "raw")
             os.makedirs(raw_dir, exist_ok=True)
-            for basename in tqdm(self._metadata.keys(), desc="Downloading (dng) "):
-                os.makedirs(self.raw_file_dir(basename), exist_ok=True)
-                filepath = self.raw_file_path(basename)
-                item_info = self._metadata[basename]
-                if self.redownload or not os.path.isfile(filepath):
-                    download(url=item_info["urls"]["dng"], filepath=filepath)
 
-    def download_experts(self):
+            process_map(self._download_raw_file,
+                        self._metadata.keys(),
+                        max_workers=num_workers,
+                        desc="Downloading (dng) ")
+
+    def download_experts(self, num_workers: int = 1):
         """
         Download expert images for each image in the dataset.
         The expert images are saved in the processed directory in TIFF format.
@@ -424,15 +448,29 @@ class MITAboveFiveKBuilder:
         os.makedirs(expert_dir, exist_ok=True)
         for e in self.experts:
             os.makedirs(os.path.join(expert_dir, f"tiff16_{e}"), exist_ok=True)
-        for basename, value in tqdm(self._metadata.items(), desc="Downloading (tiff) "):
-            os.makedirs(self.raw_file_dir(basename), exist_ok=True)
-            for e in self.experts:
-                filepath = self.expert_file_path(basename, e)
-                if self.redownload or not os.path.isfile(filepath):
-                    if not download(url=value["urls"]["tiff16"][e], filepath=filepath):
-                        raise RuntimeError(
-                            f"Error downloading a file from {value['urls']['tiff16'][e]}."
-                        )
+
+        process_map(self._download_expert_file,
+                    self._metadata.keys(),
+                    max_workers=num_workers,
+                    desc="Downloading (tiff) ")
+
+    def _download_expert_file(self, basename: str):
+        for e in self.experts:
+            filepath = self.expert_file_path(basename, e)
+            item = self._metadata[basename]
+            if self.redownload or not os.path.isfile(filepath):
+                if not download(url=item["urls"]["tiff16"][e],
+                                filepath=filepath):
+                    raise RuntimeError(
+                        f"Error downloading a file from {item['urls']['tiff16'][e]}."
+                    )
+            if "files" in item.keys():
+                if "tiff16" in item["files"]["tiff16"]:
+                    item["files"]["tiff16"][e] = filepath
+                else:
+                    item["files"]["tiff16"] = {e: filepath}
+            else:
+                item["files"] = {"tiff16": {e: filepath}}
 
     def raw_file_path(self, basename: str) -> str:
         """
@@ -461,7 +499,8 @@ class MITAboveFiveKBuilder:
                     # Note: Only the directory `HQa1400to2100` has a different naming convention.
                     target_dir = f"HQa{s}to{e-1}" if s != 1401 else "HQa1400to2100"
                     break
-            return os.path.join(self.dataset_dir, "raw", path_format.format(target_dir))
+            return os.path.join(self.dataset_dir, "raw",
+                                path_format.format(target_dir))
         else:
             make = self._metadata[basename]["camera"]["make"]
             model = self._metadata[basename]["camera"]["model"]
@@ -479,9 +518,8 @@ class MITAboveFiveKBuilder:
         Returns:
             str: The path to the expert image.
         """
-        return os.path.join(
-            self.dataset_dir, "processed", f"tiff16_{expert}", f"{basename}.tif"
-        )
+        return os.path.join(self.dataset_dir, "processed", f"tiff16_{expert}",
+                            f"{basename}.tif")
 
 
 def download(url: str, filepath: str, retry: int = 5) -> bool:
@@ -499,16 +537,16 @@ def download(url: str, filepath: str, retry: int = 5) -> bool:
         HTTPError, if one occurred.
     """
     s = requests.Session()
-    retries = urllib3.Retry(
-        total=retry, backoff_factor=1, status_forcelist=[500, 502, 503, 504]
-    )
+    retries = urllib3.Retry(total=retry,
+                            backoff_factor=1,
+                            status_forcelist=[500, 502, 503, 504])
     s.mount("http://", requests.adapters.HTTPAdapter(max_retries=retries))
     s.mount("https://", requests.adapters.HTTPAdapter(max_retries=retries))
 
     with s.get(
-        url,
-        stream=True,
-        timeout=(3.0, 7.5),  # (connect-timeout, read-timeout)
+            url,
+            stream=True,
+            timeout=(3.0, 7.5),  # (connect-timeout, read-timeout)
     ) as response:
         response.raise_for_status()
         with open(filepath, "wb") as f:

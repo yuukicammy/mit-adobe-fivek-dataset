@@ -10,7 +10,12 @@ Arguments:
     dir_root    Path of the root directory where the directory 'MITAboveFiveK' exists.
     
     [Options]
-    --to_dir    Path to a directory to save developed images. If None, save to `root_dir`/MITAboveFiveK/processed/sRGB/.
+    --to_dir    Path to a directory to save developed images. 
+                If None, save to `root_dir`/MITAboveFiveK/processed/sRGB/.
+    --experts [{a,b,c,d,e} ...]
+                List of experts who adjusted tone of the photos to download. 
+                Experts are 'a', 'b', 'c', 'd', and/or 'e'.
+    --workers   How many subprocesses to use for data downloading.
     -h, --help  Show the help message and exit.
 
 Example:
@@ -70,6 +75,20 @@ def main():
         help=
         "Path to a directory to save developed images. If None, save to `root_dir`/MITAboveFiveK/processed/sRGB/.",
     )
+    parser.add_argument(
+        "--experts",
+        nargs="*",
+        choices=["a", "b", "c", "d", "e"],
+        help=
+        "List of experts who adjusted tone of the photos to download. Experts are 'a', 'b', 'c', 'd', and/or 'e'.",
+        default=None,
+    )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        help="How many subprocesses to use for data downloading.",
+        default=4,
+    )
 
     args = parser.parse_args()
     if not args.to_dir:
@@ -80,8 +99,8 @@ def main():
     data_loader = DataLoader(MITAboveFiveK(root=args.root_dir,
                                            split="debug",
                                            download=True,
-                                           download_workers=4,
-                                           experts=['a', 'b']),
+                                           download_workers=args.workers,
+                                           experts=args.experts),
                              batch_size=None)
     for item in data_loader:
         print(item)

@@ -315,13 +315,16 @@ class MITAboveFiveKBuilder:
         else:
             item["files"] = {"dng": filepath}
 
-    def build(self, split: str = None, num_workers: int = 1) -> Dict[str, Any]:
+    def build(self,
+              split: str = None,
+              num_workers: int = None) -> Dict[str, Any]:
         """
         Builds the dataset.
 
         Args:
             split (str): One of {'train', 'val', 'test', 'debug'}. If None, build data of all splits.
-
+            num_workers (int):  How many subprocesses to use for data downloading.
+                                None means that min(32, cpu_count() + 4). (default: None)
         Returns:
             Dict[str]: metadata of builded dataset.
             The format of metadata is as follows.
@@ -407,9 +410,13 @@ class MITAboveFiveKBuilder:
             if self.redownload or not os.path.isfile(path):
                 download(self.JSON_URLS[key], path)
 
-    def download_raw(self, num_workers: int = 1) -> None:
+    def download_raw(self, num_workers: int = None) -> None:
         """
         Downloads the raw dataset.
+
+        Args:
+            num_workers (int):  How many subprocesses to use for data downloading.
+                                None means that min(32, cpu_count() + 4). (default: None)
 
         Raises:
             RuntimeError: Error rises if downloading the raw dataset fails.
@@ -436,10 +443,14 @@ class MITAboveFiveKBuilder:
                         max_workers=num_workers,
                         desc="Downloading (dng) ")
 
-    def download_experts(self, num_workers: int = 1):
+    def download_experts(self, num_workers: int = None):
         """
         Download expert images for each image in the dataset.
         The expert images are saved in the processed directory in TIFF format.
+
+        Args:
+            num_workers (int):  How many subprocesses to use for data downloading.
+                                None means that min(32, cpu_count() + 4). (default: None)
 
         Raises:
             RuntimeError: Error rises if downloading expert images fails.

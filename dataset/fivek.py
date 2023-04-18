@@ -39,6 +39,8 @@ class MITAboveFiveK(Dataset):
             split (str): One of {'train', 'val', 'test', 'debug'}. 'debug' uses only 9 data contained in 'train'.
             download (bool): If True, downloads the dataset from the official urls. Files that already exist locally will skip the download. Defaults to False.
             experts (List[str]): List of {'a', 'b', 'c', 'd', 'e'}. 'a' means 'Expert A' in the website <https://data.csail.mit.edu/graphics/fivek/>. Defaults to None.
+            download_workers (int):  How many subprocesses to use for data downloading.
+                                     None means that min(32, cpu_count() + 4). (default: 1)
 
     Notes:
             Expects the following folder structure if download=False:

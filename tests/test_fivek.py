@@ -28,27 +28,41 @@ from tests.test_common import FiveKTestCase
 
 
 class TestMITAboveFiveK(FiveKTestCase):
+
     def test_init(self):
         MITAboveFiveK(self.cache_dir, "debug")
 
     def test_init_with_download(self):
-        MITAboveFiveK(self.cache_dir, "debug", download=True)
+        MITAboveFiveK(self.cache_dir,
+                      "debug",
+                      download=True,
+                      download_workers=self.download_workers)
 
     def test_init_no_data(self):
         shutil.rmtree(self.dataset_dir)
-        self.assertRaises(
-            RuntimeError, MITAboveFiveK, self.cache_dir, "debug", download=False
-        )
+        self.assertRaises(RuntimeError,
+                          MITAboveFiveK,
+                          self.cache_dir,
+                          "debug",
+                          download=False)
 
     def test_init_with_data(self):
-        MITAboveFiveK(self.cache_dir, "debug", download=True)
+        MITAboveFiveK(self.cache_dir,
+                      "debug",
+                      download=True,
+                      download_workers=self.download_workers)
         MITAboveFiveK(self.cache_dir, "debug", download=False)
 
     def test___len__(self):
-        assert MITAboveFiveK(self.cache_dir, "debug", download=True).__len__() == 9
+        assert MITAboveFiveK(
+            self.cache_dir,
+            "debug",
+            download=True,
+            download_workers=self.download_workers).__len__() == 9
 
 
 class TestMITAboveFiveKWithDataLoader(FiveKTestCase):
+
     def test_load_with_dataloader(self):
         metadata_loader = DataLoader(
             MITAboveFiveK(self.cache_dir, "debug", download=True),

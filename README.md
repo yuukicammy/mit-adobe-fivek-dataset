@@ -1,3 +1,21 @@
+# Table of Contents
+1. [MIT-Adobe FiveK Dataset](#mit-adobe-fivek-dataset)
+   - [Official Website](#official-website)  
+   -  [License](#license)  
+   -  [Data Samples](#data-samples)  
+   - [References](#references)
+1. [Tools for MIT-Adobe FiveK Dataset](#tools-for-mit-adobe-fivek-dataset)
+   - [Requirements](#requirements)
+   - [Usage](#usage)
+   - [Example](#example)
+   - [Easiy Multi-Process Pre-Processing](#easiy-multi-process-pre-processing)
+   - [API](#api)
+   - [Format to be acquired by DataLoader](#format-to-be-acquired-by-dataloader)
+   - [Directory Structure](#directory-structure)
+   - [Resources](#references)
+
+
+
 # MIT-Adobe FiveK Dataset
 
 The MIT-Adobe FiveK Dataset [[1]]( #references ) is a publicly available dataset providing the following items.
@@ -88,6 +106,29 @@ for item in data_loader:
 
 Please see [sample code](./sample_processing.py) .
 
+## Easiy Multi-Process Pre-Processing
+
+If you set a function for preprocessing as `process_fn`, you can use PyTorch DataLoader to perform preprocessing in a multi-process manner!
+See [sample code](./sample_processing.py) .
+
+```python
+    class Preprocess:
+        def hello_world(self, item):
+            print(f"hello world! the current ID is {item['id']}")
+
+    data_loader = DataLoader(
+        MITAboveFiveK(
+            root=args.root_dir,
+            split="debug",
+            process_fn=Preprocess().hello_world),
+        batch_size=None,  # must be `None`
+        num_workers=args.workers  # multi-process for pre-processing
+    )
+    for item in data_loader:
+        # pre-processing has already been performed.
+        print(item)
+```
+
 ## API
 
 CLASS MITAboveFiveK(torch.utils.data.dataset.Dataset)  
@@ -109,7 +150,7 @@ CLASS MITAboveFiveK(torch.utils.data.dataset.Dataset)
     Function of the processing to be performed on each element of the dataset.
     This function applied in __getitem__(). Defaults to None.
 
-### Format to be acquired by DataLoader
+## Format to be acquired by DataLoader
 ```
 {
    "basename": "<(str) basename of the image>"
@@ -158,29 +199,6 @@ print(item)
 #            'tiff16': {'a': '/datasets/MITAboveFiveK/processed/tiff16_a/a1384-dvf_095.tif', 
 #                       'c': '/datasets/MITAboveFiveK/processed/tiff16_c/a1384-dvf_095.tif'}}, 
 #  'basename': 'a1384-dvf_095'}
-```
-
-## Easiy Multi-Process Pre-Processing
-
-If you set a function for preprocessing as `process_fn`, you can use PyTorch DataLoader to perform preprocessing in a multi-process manner!
-See [sample code](./sample_processing.py) .
-
-```python
-    class Preprocess:
-        def hello_world(self, item):
-            print(f"hello world! the current ID is {item['id']}")
-
-    data_loader = DataLoader(
-        MITAboveFiveK(
-            root=args.root_dir,
-            split="debug",
-            process_fn=Preprocess().hello_world),
-        batch_size=None,  # must be `None`
-        num_workers=args.workers  # multi-process for pre-processing
-    )
-    for item in data_loader:
-        # pre-processing has already been performed.
-        print(item)
 ```
 
 ## Directory Structure

@@ -114,15 +114,18 @@ def main():
     os.makedirs(args.to_dir, exist_ok=True)
 
     data_loader = DataLoader(
-        MITAboveFiveK(root=args.root_dir,
-                      split="debug",
-                      download=True,
-                      download_workers=args.workers,
-                      experts=args.experts,
-                      process_fn=Preprocess(save_dir=args.to_dir).save_srgb),
+        MITAboveFiveK(
+            root=args.root_dir,
+            split="debug",
+            download=True,
+            download_workers=args.workers,  # multi-process for download
+            experts=args.experts,
+            process_fn=Preprocess(save_dir=args.to_dir).save_srgb),
         batch_size=None,  # must be `None`
-        num_workers=args.workers)
+        num_workers=args.workers  # multi-process for pre-processing
+    )
     for item in data_loader:
+        # pre-processing has already been performed.
         print(item)
 
 

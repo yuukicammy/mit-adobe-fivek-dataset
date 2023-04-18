@@ -102,6 +102,12 @@ CLASS MITAboveFiveK(torch.utils.data.dataset.Dataset)
     If True, downloads the dataset from the official urls. Files that already exist locally will skip the download. Defaults to False.
 - experts (List[str]):  
     List of {'a', 'b', 'c', 'd', 'e'}. 'a' means 'Expert A' in the [website](https://data.csail.mit.edu/graphics/fivek/ ). If None or empty list, no expert data is used. Defaults to None.
+- download_workers (int):  
+    How many subprocesses to use for data downloading.
+    None means that min(32, cpu_count() + 4). Defaults to 1.
+- process_fn ([[Dict[str, Any]], Any]): 
+    Function of the processing to be performed on each element of the dataset.
+    This function applied in __getitem__(). Defaults to None.
 
 ### Format to be acquired by DataLoader
 ```
@@ -154,6 +160,29 @@ print(item)
 #  'basename': 'a1384-dvf_095'}
 ```
 
+## Easiy Multi-Process Pre-Processing
+
+If you set a function for preprocessing as `process_fn`, you can use PyTorch DataLoader to perform preprocessing in a multi-process manner!
+See [sample code](./sample_processing.py) .
+
+```python
+    class Preprocess:
+        def hello_world(self, item):
+            print(f"hello world! the current ID is {item['id']}")
+
+    data_loader = DataLoader(
+        MITAboveFiveK(
+            root=args.root_dir,
+            split="debug",
+            process_fn=Preprocess().hello_world),
+        batch_size=None,  # must be `None`
+        num_workers=args.workers  # multi-process for pre-processing
+    )
+    for item in data_loader:
+        # pre-processing has already been performed.
+        print(item)
+```
+
 ## Directory Structure
 
 When a dataset is downloaded using the `MITAboveFiveK` class, the files are saved in the following structure.
@@ -192,10 +221,7 @@ I provides json files that contain metadata for each image.
 | test | [testing.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/testing.json) | 1000 ||
 | debug | [debug.json](https://huggingface.co/datasets/yuukicammy/MIT-Adobe-FiveK/raw/main/debug.json) | 9 |Subset of train|
 
-## Advanced Usage
 
-The following steps can be taken to easily convert your processing to multi-processing.
 
-1. add the process you want to apply to the dataset (converting RAW to sRGB, adding noise, etc.) in the method `__getitem__` of the `MITAboveFiveK` class.
 
-2. specify the number of subprocess in `num_wokers` of DataLoader (e.g. num_worders=4)
+

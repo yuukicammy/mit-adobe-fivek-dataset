@@ -48,12 +48,29 @@ License:
 """
 
 import os
+from typing import Dict, Any
 import argparse
 import time
 import rawpy
 from torch.utils.data.dataloader import DataLoader
 from PIL import Image
 from dataset.fivek import MITAboveFiveK
+
+
+class Preprocess:
+    """Pre-processing to be applied to the dataset
+    """
+
+    def __init__(self, save_dir: str) -> None:
+        self.save_dir = save_dir
+
+    def save_srgb(self, item: Dict[str, Any]):
+        raw = rawpy.imread(item["files"]["dng"])
+        srgb = raw.postprocess()
+        path = os.path.join(self.save_dir, f"{item['basename']}.jpeg")
+        Image.fromarray(srgb).save(path)
+        item["files"]["sRGB"] = path
+        return item
 
 
 def main():
@@ -86,7 +103,7 @@ def main():
     parser.add_argument(
         "--workers",
         type=int,
-        help="How many subprocesses to use for data downloading.",
+        help="The number of subprocesses for data downloading and processing.",
         default=4,
     )
 
@@ -96,19 +113,17 @@ def main():
                                    "sRGB")
     os.makedirs(args.to_dir, exist_ok=True)
 
-    data_loader = DataLoader(MITAboveFiveK(root=args.root_dir,
-                                           split="debug",
-                                           download=True,
-                                           download_workers=args.workers,
-                                           experts=args.experts),
-                             batch_size=None)
+    data_loader = DataLoader(
+        MITAboveFiveK(root=args.root_dir,
+                      split="debug",
+                      download=True,
+                      download_workers=args.workers,
+                      experts=args.experts,
+                      process_fn=Preprocess(save_dir=args.to_dir).save_srgb),
+        batch_size=None,  # must be `None`
+        num_workers=args.workers)
     for item in data_loader:
         print(item)
-        # Some kind of process using FiveK
-        raw = rawpy.imread(item["files"]["dng"])
-        srgb = raw.postprocess()
-        Image.fromarray(srgb).save(
-            os.path.join(args.to_dir, f"{item['basename']}.jpeg"))
 
 
 if __name__ == "__main__":

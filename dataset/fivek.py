@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 import os
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Callable
 from torch.utils.data import Dataset
 from dataset.fivek_builder import MITAboveFiveKBuilder
 
@@ -35,12 +35,23 @@ class MITAboveFiveK(Dataset):
     """`MIT-Adobe FiveK <https://data.csail.mit.edu/graphics/fivek/>`_Dataset.
 
     Args:
-            root (str): The root directory where the 'MITAboveFiveK' directory exists or to be created.
-            split (str): One of {'train', 'val', 'test', 'debug'}. 'debug' uses only 9 data contained in 'train'.
-            download (bool): If True, downloads the dataset from the official urls. Files that already exist locally will skip the download. Defaults to False.
-            experts (List[str]): List of {'a', 'b', 'c', 'd', 'e'}. 'a' means 'Expert A' in the website <https://data.csail.mit.edu/graphics/fivek/>. Defaults to None.
-            download_workers (int):  How many subprocesses to use for data downloading.
-                                     None means that min(32, cpu_count() + 4). (default: 1)
+            root (str): 
+                The root directory where the 'MITAboveFiveK' directory exists or to be created.
+            split (str): 
+                One of {'train', 'val', 'test', 'debug'}. 'debug' uses only 9 data contained in 'train'.
+            download (bool): 
+                If True, downloads the dataset from the official urls. Files that already exist locally will skip the download. 
+                Defaults to False.
+            experts (List[str]): 
+                List of {'a', 'b', 'c', 'd', 'e'}. 'a' means 'Expert A' in the website <https://data.csail.mit.edu/graphics/fivek/>. 
+                Defaults to None.
+            download_workers (int):  
+                How many subprocesses to use for data downloading.
+                None means that min(32, cpu_count() + 4). Defaults to 1.
+            process_fn ([[Dict[str, Any]], Any]): 
+                Function of the processing to be performed on each element of the dataset.
+                This function applied in __getitem__().
+                Defaults to None.
 
     Notes:
             Expects the following folder structure if download=False:
@@ -75,7 +86,8 @@ class MITAboveFiveK(Dataset):
                  split: str,
                  download: bool = False,
                  experts: List[str] = None,
-                 download_workers: int = 1) -> None:
+                 download_workers: int = 1,
+                 process_fn: Callable[[Dict[str, Any]], Any] = None) -> None:
         # root directory of datasets
         self.root = root
 
@@ -86,6 +98,7 @@ class MITAboveFiveK(Dataset):
                 f"Invalid split: {split}. `split` must be one of {'train', 'val', 'test', 'debug'}."
             )
         self.split = split
+        self.process_fn = process_fn
 
         # list of 'a', 'b', 'c', 'd', and/or 'e'
         self.experts = []
@@ -119,6 +132,8 @@ class MITAboveFiveK(Dataset):
     def __getitem__(self, index: int) -> Dict[str, Any]:
         item = self.metadata[self.keys_list[index]]
         item["basename"] = self.keys_list[index]
+        if self.process_fn:
+            return self.process_fn(item)
         del item["urls"]
         return item
 

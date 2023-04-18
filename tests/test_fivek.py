@@ -21,10 +21,24 @@
 """
 import os
 import shutil
+from typing import Dict, Any
 import unittest
 from torch.utils.data.dataloader import DataLoader
 from dataset.fivek import MITAboveFiveK
 from tests.test_common import FiveKTestCase
+
+
+class Preprocess:
+    """Pre-processing to be applied to the dataset
+    """
+
+    def __init__(self, key: str, val: str) -> None:
+        self.key = key
+        self.val = val
+
+    def add_key(self, item: Dict[str, Any]):
+        item[self.key] = self.val
+        return item
 
 
 class TestMITAboveFiveK(FiveKTestCase):
@@ -36,7 +50,7 @@ class TestMITAboveFiveK(FiveKTestCase):
         MITAboveFiveK(self.cache_dir,
                       "debug",
                       download=True,
-                      download_workers=self.download_workers)
+                      download_workers=self.num_workers)
 
     def test_init_no_data(self):
         shutil.rmtree(self.dataset_dir)
@@ -50,26 +64,43 @@ class TestMITAboveFiveK(FiveKTestCase):
         MITAboveFiveK(self.cache_dir,
                       "debug",
                       download=True,
-                      download_workers=self.download_workers)
+                      download_workers=self.num_workers)
         MITAboveFiveK(self.cache_dir, "debug", download=False)
 
     def test___len__(self):
-        assert MITAboveFiveK(
-            self.cache_dir,
-            "debug",
-            download=True,
-            download_workers=self.download_workers).__len__() == 9
+        assert MITAboveFiveK(self.cache_dir,
+                             "debug",
+                             download=True,
+                             download_workers=self.num_workers).__len__() == 9
 
 
 class TestMITAboveFiveKWithDataLoader(FiveKTestCase):
 
     def test_load_with_dataloader(self):
         metadata_loader = DataLoader(
-            MITAboveFiveK(self.cache_dir, "debug", download=True),
+            MITAboveFiveK(self.cache_dir,
+                          "debug",
+                          download=True,
+                          download_workers=self.num_workers),
             batch_size=None,
         )
         for metadata in metadata_loader:
             self.check_metadata({metadata["basename"]: metadata})
+
+    def test_with_preprocess(self):
+        data_loader = DataLoader(MITAboveFiveK(
+            self.cache_dir,
+            "debug",
+            download=True,
+            download_workers=self.num_workers,
+            experts=['e'],
+            process_fn=Preprocess(key="test", val="success").add_key),
+                                 batch_size=None,
+                                 num_workers=self.num_workers)
+        for metadata in data_loader:
+            self.check_metadata({metadata["basename"]: metadata})
+            assert "test" in metadata.keys()
+            assert "success" == metadata["test"]
 
 
 if __name__ == "__main__":

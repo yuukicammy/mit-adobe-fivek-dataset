@@ -27,7 +27,7 @@ class FiveKTestCase(unittest.TestCase):
     cache_dir = ".cache"
     dataset_dir = ".cache/MITAboveFiveK"
     categories_labels = ["location", "time", "light", "subject"]
-    download_workers = 4
+    num_workers = 4
 
     def check_metadata(self, metadata: Dict[str, Any]):
         for value in metadata.values():

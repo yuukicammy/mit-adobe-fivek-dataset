@@ -457,6 +457,8 @@ class MITAboveFiveKBuilder:
         """
         expert_dir = os.path.join(self.dataset_dir, "processed")
         os.makedirs(expert_dir, exist_ok=True)
+        if not self.experts or len(self.experts) == 0:
+            return
         for e in self.experts:
             os.makedirs(os.path.join(expert_dir, f"tiff16_{e}"), exist_ok=True)
 

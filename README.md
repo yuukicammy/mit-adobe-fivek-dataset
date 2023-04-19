@@ -24,7 +24,7 @@ The MIT-Adobe FiveK Dataset [[1]]( #references ) is a publicly available dataset
 2. retouched images of each RAW image by five experts in TIFF format (25,000 images, 16 bits per channel, ProPhoto RGB color space, and lossless compression)
 3. semantic information about each image
 
-The dataset was created by MIT and Adobe Systems, Inc., and is intended to provide a diverse and challenging set of images for testing image processing algorithms. The images were selected to represent a wide range of scenes, including landscapes, portraits, still lifes, and architecture. The images also vary in terms of lighting conditions, color balance, and exposure.
+The dataset was created by MIT and Adobe Inc., and is intended to provide a diverse and challenging set of images for testing image processing algorithms. The images were selected to represent a wide range of scenes, including landscapes, portraits, still lifes, and architecture. The images also vary in terms of lighting conditions, color balance, and exposure.
 
 ## Official Website
 
